@@ -12,9 +12,9 @@ import PropTypes from "prop-types";
 export default function UpdateAlbumForm({
   albumName,
   setAlbumName,
-  handleImageUpload,
+  handleNewImages,
   handleSubmit,
-  isSubmitting,
+  isLoading,
 }) {
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -44,16 +44,17 @@ export default function UpdateAlbumForm({
             name="images"
             hidden
             multiple
-            onChange={handleImageUpload} // Call handleImageUpload here
+            onChange={(e) => handleNewImages(e.target.files)} // Capture new images
           />
         </Button>
         <Button
-          variant="contained"
           type="submit"
-          disabled={isSubmitting}
-          endIcon={isSubmitting && <CircularProgress size={24} />}
+          variant="contained"
+          color="primary"
+          disabled={isLoading} // Disable button while loading
+          endIcon={isLoading && <CircularProgress size={24} sx={{color:"white"}}/>}
         >
-          Update
+          Update Album
         </Button>
       </Stack>
     </Box>
@@ -63,7 +64,7 @@ export default function UpdateAlbumForm({
 UpdateAlbumForm.propTypes = {
   albumName: PropTypes.string.isRequired,
   setAlbumName: PropTypes.func.isRequired,
-  handleImageUpload: PropTypes.func.isRequired,
+  handleNewImages: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  isSubmitting: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired, // Ensure the submit handler is required
 };

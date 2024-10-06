@@ -56,7 +56,7 @@ export default function UploadAlbumForm({
           variant="contained"
           type="submit"
           disabled={isSubmitting}
-          endIcon={isSubmitting && <CircularProgress size={24} />}
+          endIcon={isSubmitting && <CircularProgress size={24} sx={{color:"white"}}/>}
         >
           Create
         </Button>
