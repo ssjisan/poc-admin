@@ -7,13 +7,11 @@ import UpdateAlbumForm from "./UpdateAlbumForm";
 import UpdateImagePreview from "./UpdateImagePreview";
 
 export default function UpdateMarkedAlbum() {
-  const params = useParams();
+  const { id: albumId } = useParams();
   const [albumName, setAlbumName] = useState("");
-  const [id, setId] = useState("");
-  const navigate = useNavigate();
-  const [images, setImages] = useState([]); // Combined state for existing and new images
-  const [removedImageIds, setRemovedImageIds] = useState([]); // Track removed image IDs
+  const [images, setImages] = useState([]); // State for both existing and new images
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadAlbum();
@@ -21,7 +19,7 @@ export default function UpdateMarkedAlbum() {
 
   const loadAlbum = async () => {
     try {
-      const { data } = await axios.get(`/album/${params.id}`);
+      const { data } = await axios.get(`/album/${albumId}`);
       setAlbumName(data.name);
       const formattedImages = data.images.map((image) => ({
         src: image.src,
@@ -29,94 +27,55 @@ export default function UpdateMarkedAlbum() {
         size: image.size,
         name: image.name,
         _id: image._id,
-        fromDatabase: true,
+        fromDatabase: true, // Existing image
       }));
-      setImages(formattedImages);
-      setId(data._id);
+      setImages(formattedImages); // Set the existing images
     } catch (err) {
       toast.error("Failed to load album data");
+      console.error("Error loading album:", err);
     }
   };
 
-  const handleNewImages = (newImageFiles) => {
-    const imageFiles = Array.from(newImageFiles).map((file) => ({
-      src: URL.createObjectURL(file), // Create a temporary local preview
-      file, // Store the file itself for uploading
-      name: file.name,
-      size: (file.size / (1024 * 1024)).toFixed(2),
-      fromDatabase: false, // Indicate this is a new image
-    }));
-    setImages((prev) => [...prev, ...imageFiles]); // Append new images to existing images
-  };
-
-  const handleRemoveImage = (imageId, isFromDatabase) => {
-    if (isFromDatabase) {
-      setImages(images.filter((image) => image._id !== imageId)); // Remove from existing images
-      setRemovedImageIds((prev) => [...prev, imageId]); // Track removed image ID
-    } else {
-      setImages(images.filter((image) => image.name !== imageId)); // Remove from new images
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true); // Start loading state
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
+      formData.append("albumName", albumName);
 
-      // Append updated album name (if applicable)
-      formData.append("name", albumName);
-
-      // Append new images (if any)
+      // Add new images to the form data (only files)
       images.forEach((image) => {
         if (!image.fromDatabase) {
-          formData.append("newImages", image.file);
+          formData.append("newImages", image.file); // Append actual file object
         }
       });
 
-      // Prepare the removed image IDs to be sent to the backend
-      formData.append("removedImages", JSON.stringify(removedImageIds));
+      // Add existing images' metadata
+      const existingImages = images
+        .filter((image) => image.fromDatabase)
+        .map((image) => ({
+          _id: image._id,
+          public_id: image.public_id,
+          src: image.src,
+          name: image.name,
+          size: image.size,
+        }));
 
-      // Update the album on the backend
-      const response = await axios.put(`/album/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      formData.append("existingImages", JSON.stringify(existingImages));
+
+      const { data } = await axios.put(`/album/${albumId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Album updated successfully!");
-      navigate("/album_list");
+      toast.success(data.message);
+      navigate(`/albums/${albumId}`); // Redirect after success
     } catch (err) {
-      // Check for specific error messages
-      if (
-        err.response &&
-        err.response.data &&
-        err.response.data.message.includes("File size too large")
-      ) {
-        toast.error(
-          "File size too large. Please remove large files and try again. Maximum file size is 10 MB."
-        );
-      } else {
-        toast.error("Failed to update album");
-      }
+      console.error("Error updating album:", err);
+      toast.error("Failed to update album");
     } finally {
-      setIsLoading(false); // Stop loading state
+      setIsLoading(false);
     }
-  };
-
-  const onDragEnd = (result) => {
-    // Check if dropped outside of the list
-    if (!result.destination) return;
-
-    // Create a copy of the images array
-    const reorderedImages = Array.from(images);
-    const [movedImage] = reorderedImages.splice(result.source.index, 1); // Remove the item from the original position
-    reorderedImages.splice(result.destination.index, 0, movedImage); // Insert it at the new position
-
-    // Update the state with the new order
-    setImages(reorderedImages);
-    console.log('Reordered Images:', reorderedImages);
   };
 
   return (
@@ -126,17 +85,17 @@ export default function UpdateMarkedAlbum() {
           <UpdateAlbumForm
             albumName={albumName}
             setAlbumName={setAlbumName}
-            handleNewImages={handleNewImages} // Pass down the image handler
-            handleSubmit={handleSubmit}
+            images={images} // Pass the combined images array to the form
+            setImages={setImages} // Pass the setter function to update images
             isLoading={isLoading} // Pass loading state to form
+            handleSubmit={handleSubmit}
           />
         </Grid>
         <Grid item xs={12} lg={9}>
           <UpdateImagePreview
-            images={images} // Use combined images state
-            removeImage={handleRemoveImage} // Handle image removal
+            images={images} // Use combined images state (existing + new)
+            setImages={setImages} // Pass the setter function to update images
             isLoading={isLoading}
-            onDragEnd={onDragEnd} // Pass down the onDragEnd handler
           />
         </Grid>
       </Grid>

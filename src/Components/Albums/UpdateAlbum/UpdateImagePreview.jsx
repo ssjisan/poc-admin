@@ -6,26 +6,43 @@ import {
   Typography,
 } from "@mui/material";
 import { Cross, Drag } from "../../../assets/IconSet";
-import PropTypes from "prop-types";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-export default function UpdateImagePreview({ images, removeImage, isLoading, onDragEnd }) {
+export default function UpdateImagePreview({ images, setImages, isLoading }) {
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reorderedImages = Array.from(images);
+    const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    reorderedImages.splice(result.destination.index, 0, movedImage);
+
+    setImages(reorderedImages); // Update images state with reordered images
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = images.filter((_, imgIndex) => imgIndex !== index);
+    setImages(updatedImages); // Update images array without the removed image
+  };
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable-images">
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <Droppable droppableId="images">
         {(provided) => (
           <Stack
-            ref={provided.innerRef}
+            direction="column"
+            gap="16px"
+            sx={{ mt: "40px" }}
             {...provided.droppableProps}
-            spacing={2}
+            ref={provided.innerRef}
           >
             {images.map((data, index) => (
-              <Draggable key={data._id || data.name} draggableId={data._id || data.name} index={index}>
+              <Draggable
+                key={data._id || data.name} // Use unique key
+                draggableId={data._id || data.name}
+                index={index}
+              >
                 {(provided) => (
                   <Stack
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
@@ -35,9 +52,12 @@ export default function UpdateImagePreview({ images, removeImage, isLoading, onD
                       p: "8px 4px",
                       backgroundColor: "white",
                     }}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
                   >
                     <Stack direction="row" alignItems="center" gap="12px">
-                      <IconButton>
+                      <IconButton {...provided.dragHandleProps}>
                         <Drag size={24} color="#000" />
                       </IconButton>
                       <Stack>
@@ -61,11 +81,7 @@ export default function UpdateImagePreview({ images, removeImage, isLoading, onD
                           <CircularProgress size={20} />
                         </Box>
                       ) : (
-                        <IconButton
-                          onClick={() =>
-                            removeImage(data._id || data.name, data.fromDatabase)
-                          }
-                        >
+                        <IconButton onClick={() => handleRemoveImage(index)}>
                           <Cross size={24} color="#F15555" />
                         </IconButton>
                       )}
@@ -81,10 +97,3 @@ export default function UpdateImagePreview({ images, removeImage, isLoading, onD
     </DragDropContext>
   );
 }
-
-UpdateImagePreview.propTypes = {
-  images: PropTypes.array.isRequired,
-  removeImage: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  onDragEnd: PropTypes.func.isRequired,
-};

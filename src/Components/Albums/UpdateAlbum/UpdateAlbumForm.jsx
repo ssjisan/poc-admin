@@ -12,10 +12,24 @@ import PropTypes from "prop-types";
 export default function UpdateAlbumForm({
   albumName,
   setAlbumName,
-  handleNewImages,
-  handleSubmit,
+  images, // New prop to handle the images array
+  setImages, // Prop to update the images array
   isLoading,
+  handleSubmit,
 }) {
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const newImages = files.map((file) => ({
+      src: URL.createObjectURL(file), // Generate a preview URL
+      name: file.name,
+      size: (file.size / (1024 * 1024)).toFixed(2), // Convert size to MB
+      file: file, // Store the actual file for uploading
+      fromDatabase: false, // Mark as newly uploaded image
+    }));
+
+    setImages((prevImages) => [...prevImages, ...newImages]); // Add to existing images
+  };
+
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h4" sx={{ mb: "40px" }}>
@@ -27,7 +41,7 @@ export default function UpdateAlbumForm({
           variant="outlined"
           fullWidth
           value={albumName}
-          onChange={(e) => setAlbumName(e.target.value)} // Update album name state
+          onChange={(e) => setAlbumName(e.target.value)} // Update album name
           sx={{ mb: 3 }}
         />
         <Button
@@ -41,10 +55,9 @@ export default function UpdateAlbumForm({
           <input
             type="file"
             accept="image/*"
-            name="images"
             hidden
             multiple
-            onChange={(e) => handleNewImages(e.target.files)} // Capture new images
+            onChange={handleFileUpload} // Handle file upload
           />
         </Button>
         <Button
@@ -52,7 +65,7 @@ export default function UpdateAlbumForm({
           variant="contained"
           color="primary"
           disabled={isLoading} // Disable button while loading
-          endIcon={isLoading && <CircularProgress size={24} sx={{color:"white"}}/>}
+          endIcon={isLoading && <CircularProgress size={24} sx={{ color: "white" }} />}
         >
           Update Album
         </Button>
@@ -64,7 +77,8 @@ export default function UpdateAlbumForm({
 UpdateAlbumForm.propTypes = {
   albumName: PropTypes.string.isRequired,
   setAlbumName: PropTypes.func.isRequired,
-  handleNewImages: PropTypes.func.isRequired,
+  images: PropTypes.array.isRequired,
+  setImages: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired, // Ensure the submit handler is required
 };
