@@ -69,7 +69,7 @@ export default function UpdateMarkedAlbum() {
       });
 
       toast.success(data.message);
-      navigate(`/albums/${albumId}`); // Redirect after success
+      navigate("/album_list"); // Redirect after success
     } catch (err) {
       console.error("Error updating album:", err);
       toast.error("Failed to update album");
