@@ -65,7 +65,6 @@ export default function TableViewer() {
     const reorderedVideos = Array.from(videos);
     const [movedVideo] = reorderedVideos.splice(result.source.index, 1);
     reorderedVideos.splice(result.destination.index, 0, movedVideo);
-  
     setVideos(reorderedVideos);
   
     // Send reordered video IDs to the backend
@@ -73,7 +72,7 @@ export default function TableViewer() {
     console.log("Sending reordered videos to the server:", reorderedIds);
   
     try {
-      await axios.post('update-order', { reorderedVideos });
+      await axios.post('/update-order', { reorderedVideos });
       toast.success("Video order updated successfully!");
     } catch (error) {
       console.error("Error updating video order:", error);

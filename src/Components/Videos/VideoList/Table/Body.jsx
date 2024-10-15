@@ -53,7 +53,7 @@ export default function Body({
                         sx={{ overflow: "hidden" }}
                       >
                         <TableCell align="center">
-                          <Tooltip title="Actions">
+                          <Tooltip title="Drag">
                             <IconButton sx={{ width: "40px", height: "40px" }}>
                               <Drag color="#919EAB" size={24} />
                             </IconButton>

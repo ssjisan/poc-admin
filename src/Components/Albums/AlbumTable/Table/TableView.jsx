@@ -18,7 +18,7 @@ export default function TableView() {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [albumToDelete, setAlbumToDelete] = useState(null);
   const [albumOpen, setAlbumOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // Load Albums Start //
   useEffect(() => {
     loadAlbums();
@@ -96,13 +96,32 @@ export default function TableView() {
     }
   };
 
-
   // Edit Album COntroller Start
 
   const redirectEdit = (e, selectedAlbum) => {
     navigate(`/album/${selectedAlbum._id}`);
   };
 
+  const onDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    const reorderedAlbums = Array.from(albums);
+    const [movedVideo] = reorderedAlbums.splice(result.source.index, 1);
+    reorderedAlbums.splice(result.destination.index, 0, movedVideo);
+    setAlbums(reorderedAlbums);
+
+    // Send reordered video IDs to the backend
+    const reorderedIds = reorderedAlbums.map((album) => album._id);
+    console.log("Sending reordered videos to the server:", reorderedIds);
+
+    try {
+      await axios.post("/update-order", { reorderedAlbums });
+      toast.success("Album order updated successfully!");
+    } catch (error) {
+      console.error("Error updating album order:", error);
+      toast.error("Failed to update album order.");
+    }
+  };
 
   return (
     <Box
@@ -118,6 +137,7 @@ export default function TableView() {
         <Table>
           <Header />
           <Body
+            onDragEnd={onDragEnd}
             albums={albums}
             page={page}
             rowsPerPage={rowsPerPage}
