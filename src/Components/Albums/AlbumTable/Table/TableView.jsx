@@ -115,7 +115,7 @@ export default function TableView() {
     console.log("Sending reordered videos to the server:", reorderedIds);
 
     try {
-      await axios.post("/update-order", { reorderedAlbums });
+      await axios.post("/update-album-order", { reorderedAlbums });
       toast.success("Album order updated successfully!");
     } catch (error) {
       console.error("Error updating album order:", error);
