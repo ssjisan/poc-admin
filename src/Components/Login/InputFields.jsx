@@ -71,7 +71,7 @@ export default function InputFields() {
       }
     } catch (err) {
       setLoading(false);
-      toast.error("Please try again");
+      toast.error(`${err.message}. Please try again`);
     }
   };
 

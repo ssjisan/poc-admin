@@ -16,13 +16,10 @@ export default function UploadAlbumForm({
   albumName, // Accept albumName as a prop
   setAlbumName, // Accept setAlbumName as a prop
 }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onFormSubmit(albumName); // Pass the albumName to onFormSubmit
-  };
+  
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={onFormSubmit}>
       <Typography variant="h4" sx={{ mb: "40px" }}>
         Create Album
       </Typography>
@@ -60,6 +57,9 @@ export default function UploadAlbumForm({
         >
           Create
         </Button>
+        <Typography variant="body2" color={"text.secondary"}>
+          Maximum file size is 10MB. 
+        </Typography>
       </Stack>
     </Box>
   );

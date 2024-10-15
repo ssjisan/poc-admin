@@ -24,7 +24,7 @@ export default function Body({
   handlePreviewAlbum,
   showConfirmationModal,
   redirectEdit,
-  selectedAlbum
+  selectedAlbum,
 }) {
   return (
     <TableBody>
@@ -59,17 +59,21 @@ export default function Body({
                       />
                     </Box>
                   )}
-                  <Typography variant="subtitle2" noWrap align="left">
+                  <Typography variant="subtitle2" align="left">
                     {data.name}
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell align="left">
-                {format(new Date(data.createdAt), "dd MMMM yyyy, hh:mm a")}
+              <TableCell align="left" sx={{ p: "16px" }}>
+                {format(new Date(data.createdAt), "dd MMM, yy")}
               </TableCell>
-              <TableCell align="center">{data?.images?.length}</TableCell>
-              <TableCell align="center">{totalSize.toFixed(2)} MB</TableCell>
-              <TableCell align="center">
+              <TableCell align="center" sx={{ p: "16px" }}>
+                {data?.images?.length}
+              </TableCell>
+              <TableCell align="center" sx={{ p: "16px" }}>
+                {totalSize.toFixed(2)} MB
+              </TableCell>
+              <TableCell align="center" sx={{ p: "16px" }}>
                 <Tooltip title="Actions">
                   <IconButton
                     sx={{ width: "40px", height: "40px" }}

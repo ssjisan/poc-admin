@@ -1,3 +1,4 @@
+import Lottie, { useLottie } from "lottie-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -17,6 +18,16 @@ export default function Loading() {
     return () => clearInterval(interval);
   }, [counter]);
 
+  const options = {
+    animationData: "../assets/loader.json",
+    loop: true,
+    autoplay: true,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  };
+
+
   return (
     <div
       style={{
@@ -29,8 +40,11 @@ export default function Loading() {
         textAlign: "center",
       }}
     >
-      <img src="/loader02.gif" alt="Loader" width="200px"/>
-      {/* Wait {counter} */}
+      <Lottie
+        options={options}
+        height={300}
+        width={300}
+      />
     </div>
   );
 }

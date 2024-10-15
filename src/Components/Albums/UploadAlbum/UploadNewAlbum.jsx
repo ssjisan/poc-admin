@@ -30,7 +30,9 @@ export default function UploadNewAlbum() {
   };
 
   // Handle album form submission (send data to the backend)
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
     if (!albumName) {
       toast.error("Album name is required");
       return;

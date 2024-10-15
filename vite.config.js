@@ -13,5 +13,9 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     build: { chunkSizeWarningLimit: 1600 },
+    // Add the server configuration here
+    server: {
+      host: true, // This enables access from other devices on the network
+    },
   };
 });

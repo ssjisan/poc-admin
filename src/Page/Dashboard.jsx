@@ -3,8 +3,6 @@ import Sidebar from "../Layout/Sidebar";
 import MatrixCardDeck from "../Components/Dashboard/MatrixCardDeck";
 import SupportCard from "../Components/Dashboard/SupportCard/SupportCard";
 import DirectNavigation from "../Components/Dashboard/DirectNavigation/DirectNavigation";
-import NoticeUpdate from "../Components/Dashboard/Notice Update/NoticeUpdate";
-import UpcomingEvents from "../Components/Dashboard/Upcoming Events/UpcomingEvents";
 export default function Dashboard() {
   const drawerWidth = 280;
 
@@ -30,14 +28,14 @@ export default function Dashboard() {
             </Grid>
           </Grid>
           <MatrixCardDeck />
-          <Grid container spacing={3}>
+          {/* <Grid container spacing={3}>
             <Grid item xs={12} sm={12} md={4}>
               <NoticeUpdate />
             </Grid>
             <Grid item xs={12} sm={12} md={8}>
               <UpcomingEvents />
             </Grid>
-          </Grid>
+          </Grid> */}
         </Box>
       </Box>
     </Box>
