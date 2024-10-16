@@ -23,7 +23,7 @@ export default function MainRouters() {
           <Route path="/album/:id" element={<UpdateAlbum />} />
           <Route path="/upload_video" element={<UploadVideo />} />
           <Route path="/video_list" element={<VideoList />} />
-          <Route path="/video/:id" element={<UpdateVideo />} />
+          <Route path="/video/:slug" element={<UpdateVideo />} />
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}
       </Routes>

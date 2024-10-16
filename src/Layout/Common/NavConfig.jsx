@@ -1,4 +1,4 @@
-import { AlbumList, Dashboard, Video } from "../../assets/IconSet";
+import { AlbumList, Dashboard, Doctor, Video } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => [
   {
@@ -42,7 +42,7 @@ const navConfig = ({ pathname }) => [
     icon: (
       <Video
         color={
-          pathname.startsWith("/upload_videom") ||
+          pathname.startsWith("/upload_video") ||
           pathname.startsWith("/video_list")
             ? "#00AE60"
             : "#637381"
@@ -61,6 +61,31 @@ const navConfig = ({ pathname }) => [
       },
     ],
   },
+  {
+    title: "Doctor",
+    icon: (
+      <Doctor
+        color={
+          pathname.startsWith("/add_doctor") ||
+          pathname.startsWith("/doctor_list")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Add Doctor",
+        link: "/add_docto",
+      },
+      {
+        title: "Doctor List",
+        link: "/doctor_list",
+      },
+    ],
+  },
+  
 ];
 
 export default navConfig;

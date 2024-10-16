@@ -1,6 +1,6 @@
 import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
-import UpdateMarkedAlbum from "../../Components/Albums/UpdateAlbum/UpdateMarkedAlbum";
+import UpdateMarkedVideo from "../../Components/Videos/UpdateVideo/UpdateMarkedVideo";
 
 export default function UpdateVideo() {
   const drawerWidth = 280;
@@ -18,7 +18,7 @@ export default function UpdateVideo() {
       >
         <Toolbar />
         <Box>
-          <UpdateMarkedAlbum />
+          <UpdateMarkedVideo />
         </Box>
       </Box>
     </Box>

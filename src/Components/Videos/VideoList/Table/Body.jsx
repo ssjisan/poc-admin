@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   IconButton,
@@ -23,6 +22,10 @@ export default function Body({
   handleOpenMenu,
   handleCloseMenu,
   formatDate,
+  showConfirmationModal,
+  selectedVideo,
+  handleVideoPlay,
+  redirectEdit,
   onDragEnd, // Callback to handle the drag end event
 }) {
   const getVideoId = (url) => {
@@ -31,7 +34,6 @@ export default function Body({
     const match = url.match(videoIdRegex);
     return match ? match[1] : null; // Return video ID or null
   };
-  
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -44,7 +46,11 @@ export default function Body({
                 const videoId = getVideoId(data.url); // Get video ID
                 const thumb = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
                 return (
-                  <Draggable key={data._id} draggableId={data._id} index={index}>
+                  <Draggable
+                    key={data._id}
+                    draggableId={data._id}
+                    index={index}
+                  >
                     {(provided) => (
                       <TableRow
                         ref={provided.innerRef}
@@ -60,7 +66,11 @@ export default function Body({
                           </Tooltip>
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          <Stack direction="row" alignItems="center" spacing={2}>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={2}
+                          >
                             <Box
                               sx={{
                                 width: "80px",
@@ -121,12 +131,14 @@ export default function Body({
       >
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
+          onClick={handleVideoPlay}
         >
           <EyeBold color="#919EAB" size={20} />
           Preview
         </MenuItem>
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
+          onClick={(e) => redirectEdit(e, selectedVideo)}
         >
           <Edit color="#919EAB" size={20} />
           Edit
@@ -138,6 +150,7 @@ export default function Body({
             gap: "8px",
             borderRadius: "8px",
           }}
+          onClick={showConfirmationModal}
         >
           <Remove color="red" size={20} /> Delete
         </MenuItem>
@@ -154,5 +167,7 @@ Body.propTypes = {
   handleOpenMenu: PropTypes.any,
   handleCloseMenu: PropTypes.any,
   formatDate: PropTypes.any,
-  onDragEnd: PropTypes.func.isRequired, // Add prop type for onDragEnd
+  onDragEnd: PropTypes.func.isRequired,
+  showConfirmationModal: PropTypes.func.isRequired,
+  selectedVideo: PropTypes.func.isRequired,
 };
