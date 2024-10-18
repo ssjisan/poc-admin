@@ -1685,6 +1685,71 @@ export const Doctor = ({ color, size }) => {
   );
 };
 
+export const Camera = ({ color, size }) => {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 22 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.02466 19H12.9753C15.7495 19 17.1367 19 18.1331 18.3463C18.5645 18.0633 18.9348 17.6997 19.2231 17.2762C19.8889 16.2978 19.8889 14.9359 19.8889 12.2121C19.8889 9.48832 19.8889 8.12641 19.2231 7.14809C18.9348 6.72457 18.5645 6.36093 18.1331 6.07794C17.4928 5.6579 16.6912 5.50776 15.464 5.45409C14.8783 5.45409 14.3741 5.01838 14.2592 4.45455C14.0869 3.60879 13.3306 3 12.4521 3H9.54783C8.66935 3 7.913 3.60879 7.74071 4.45455C7.62586 5.01838 7.12162 5.45409 6.53597 5.45409C5.30871 5.50776 4.50713 5.6579 3.86686 6.07794C3.43549 6.36093 3.06511 6.72457 2.77688 7.14809C2.11108 8.12641 2.11108 9.48832 2.11108 12.2121C2.11108 14.9359 2.11108 16.2978 2.77688 17.2762C3.06511 17.6997 3.43549 18.0633 3.86686 18.3463C4.86329 19 6.25042 19 9.02466 19Z"
+          fill={color}
+          stroke={color}
+          strokeWidth="1.33333"
+        />
+        <ellipse cx="11" cy="11.8893" rx="2.66667" ry="2.66667" fill="white" />
+        <path
+          d="M17.2222 9.22266H16.3333"
+          stroke="white"
+          strokeWidth="1.33333"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
+};
+
+export const Avatar = ({ color, size }) => {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="12" cy="6" r="4" fill={color} />
+        <path
+          opacity="0.5"
+          d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+          fill={color}
+        />
+      </svg>
+    </div>
+  );
+};
+
 Dashboard.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -1873,6 +1938,14 @@ Cross.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 Doctor.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Camera.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Avatar.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };

@@ -2,7 +2,7 @@ import { TablePagination } from "@mui/material";
 import PropTypes from "prop-types";
 
 export default function Pagination({
-    videos,
+  profiles,
   rowsPerPage,
   page,
   handleChangePage,
@@ -10,20 +10,21 @@ export default function Pagination({
 }) {
   return (
     <TablePagination
-      rowsPerPageOptions={[50]}
-      count={videos.length}
+      rowsPerPageOptions={[5]}
+      count={profiles.length}
       rowsPerPage={rowsPerPage}
       page={page}
       onPageChange={handleChangePage}
       onRowsPerPageChange={handleChangeRowsPerPage}
       sx={{
         borderBottom: "none",
+        borderTop: "1px solid rgba(145, 158, 171, 0.24)",
       }}
     />
   );
 }
 Pagination.propTypes = {
-  videos: PropTypes.any,
+  profiles: PropTypes.any,
   rowsPerPage: PropTypes.any,
   page: PropTypes.func,
   handleChangePage: PropTypes.any,

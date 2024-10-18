@@ -22,7 +22,6 @@ export default function UpdateVideoForm() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const params = useParams();
-  console.log(params.slug);
 
   useEffect(() => {
     loadVideo();

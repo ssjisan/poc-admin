@@ -154,7 +154,7 @@ export function overrides(theme) {
           boxSizing: "border-box", // Ensure padding is factored in height
         },
         notchedOutline: {
-          borderColor: theme.palette.grey[500],
+          borderColor: alpha(theme.palette.grey[500], 0.32),
         },
       },
     },

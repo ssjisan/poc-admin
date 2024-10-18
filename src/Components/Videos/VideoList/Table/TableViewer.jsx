@@ -13,7 +13,7 @@ export default function TableViewer() {
   const [videos, setVideos] = useState([]);
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [videoToDelete, setVideoToDelete] = useState(null);
