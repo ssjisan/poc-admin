@@ -30,7 +30,7 @@ export default function Body({
 }) {
   const getVideoId = (url) => {
     const videoIdRegex =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(videoIdRegex);
     return match ? match[1] : null; // Return video ID or null
   };
@@ -170,4 +170,6 @@ Body.propTypes = {
   onDragEnd: PropTypes.func.isRequired,
   showConfirmationModal: PropTypes.func.isRequired,
   selectedVideo: PropTypes.func.isRequired,
+  handleVideoPlay: PropTypes.func.isRequired,
+  redirectEdit: PropTypes.func.isRequired,
 };

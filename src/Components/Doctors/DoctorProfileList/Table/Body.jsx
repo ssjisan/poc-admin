@@ -1,4 +1,4 @@
-import { Edit, More, Remove, Update } from "../../../../assets/IconSet";
+import { Edit, More, Remove } from "../../../../assets/IconSet";
 import {
   Box,
   IconButton,
@@ -20,6 +20,9 @@ export default function Body({
   open,
   handleOpenMenu,
   handleCloseMenu,
+  showConfirmationModal,
+  redirectEdit,
+  selectedProfile,
 }) {
   return (
     <TableBody>
@@ -92,6 +95,7 @@ export default function Body({
       >
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
+          onClick={(e) => redirectEdit(e, selectedProfile)}
         >
           <Edit color="#919EAB" size={20} />
           Edit
@@ -103,6 +107,7 @@ export default function Body({
             gap: "8px",
             borderRadius: "8px",
           }}
+          onClick={showConfirmationModal}
         >
           <Remove color="red" size={20} /> Delete
         </MenuItem>
@@ -117,6 +122,10 @@ Body.propTypes = {
   rowsPerPage: PropTypes.any,
   handleOpenMenu: PropTypes.any,
   openMenu: PropTypes.any,
+  open: PropTypes.any,
   handleCloseMenu: PropTypes.any,
   selectedMember: PropTypes.any,
+  showConfirmationModal: PropTypes.any,
+  selectedProfile: PropTypes.any,
+  redirectEdit: PropTypes.any,
 };
