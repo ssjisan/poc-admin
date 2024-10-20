@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
+import {
+  Button,
+  Stack,
+  Typography,
+  useMediaQuery,
+  TextField,
+} from "@mui/material";
 import UpdateProfileImage from "./UpdateProfileImage";
 import UpdateSerialInfo from "./UpdateSerialInfo";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,9 +16,10 @@ import toast from "react-hot-toast";
 export default function UpdateProfileInfo() {
   const forBelow1200 = useMediaQuery("(max-width:1200px)");
   const forBelow676 = useMediaQuery("(max-width:676px)");
-  // Start Here //
+
+  // States for profile information
   const [profilePhoto, setProfilePhoto] = useState(""); // Image URL from DB
-  const [image, setImage] = useState(null); 
+  const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
   const [email, setEmail] = useState("");
@@ -24,11 +31,11 @@ export default function UpdateProfileInfo() {
   const [consultationDays, setConsultationDays] = useState([]);
   const [consultationTime, setConsultationTime] = useState("");
   const [creating, setCreating] = useState(false);
+
   const navigate = useNavigate();
   const params = useParams();
 
   // Load Data for Profile
-  console.log(consultationDays)
   useEffect(() => {
     loadMember();
   }, []);
@@ -53,12 +60,58 @@ export default function UpdateProfileInfo() {
       toast.error("Failed to load profile data");
     }
   };
+
+  // Handle Image Upload
   const handleImageUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);  // Set new image file
-      setProfilePhoto(URL.createObjectURL(e.target.files[0]));  // Preview the new image
+      setImage(e.target.files[0]); // Set new image file
+      setProfilePhoto(URL.createObjectURL(e.target.files[0])); // Preview the new image
     }
   };
+
+  // Handle Form Submit
+  const handleSubmit = async () => {
+    setCreating(true);
+    const formData = new FormData();
+
+    // Append all fields
+    formData.append("name", name);
+    formData.append("designation", designation);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("whatsApp", whatsApp);
+    formData.append("detailsInfo", detailsInfo);
+    formData.append("location", location);
+    formData.append("appointmentNumber", appointmentNumber);
+    consultationDays.forEach((day) => formData.append("consultationDays[]", day));
+    formData.append("consultationTime", consultationTime);
+
+    // Check if a new image is uploaded
+    if (image) {
+      formData.append("profilePhoto", image);
+    }
+
+    try {
+      const response = await axios.put(`/doctor/${params.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Important for file uploads
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Profile updated successfully");
+        navigate("/doctor_list");
+      } else {
+        throw new Error("Profile update failed");
+      }
+    } catch (err) {
+      toast.error("Failed to update profile");
+      console.error("Update error:", err); // Logs the actual error
+    } finally {
+      setCreating(false);
+    }
+  };
+
   return (
     <Stack gap={2} sx={{ pb: "64px" }}>
       <Typography variant="h4" sx={{ mb: "40px" }}>
@@ -66,8 +119,8 @@ export default function UpdateProfileInfo() {
       </Typography>
       <Stack gap="24px" alignItems="center">
         <UpdateProfileImage
-          profilePhoto={profilePhoto}   // Either DB image or new one
-          handleImageUpload={handleImageUpload}   // Function to handle uploads
+          profilePhoto={profilePhoto} // Either DB image or new one
+          handleImageUpload={handleImageUpload} // Function to handle uploads
         />
         <UpdateBasicInfo
           forBelow676={forBelow676}
@@ -111,10 +164,19 @@ export default function UpdateProfileInfo() {
           borderTop: "1px solid rgba(145, 142, 175, 0.4)",
         }}
       >
-        <Button variant="outlined" color="inherit">
+        <Button
+          variant="outlined"
+          color="inherit"
+          onClick={() => navigate("/doctor_list")}
+        >
           Cancel
         </Button>
-        <Button variant="contained" color="primary" disabled={creating}>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={creating}
+          onClick={handleSubmit}
+        >
           {creating ? "Updating..." : "Update"}
         </Button>
       </Stack>

@@ -30,12 +30,7 @@ export default function UpdateSerialInfo({
   ];
 
   console.log("Consultation Days:", consultationDays);
-  const test = [1, 2, 3];
-  console.log(
-    "Filtered Days:",
-    days.filter((day) => test.includes(day.id))
-  );
-
+  
   return (
     <Stack gap="16px" sx={{ width: "100%" }}>
       <Divider textAlign="left" sx={{ color: "#637381" }}>
@@ -60,27 +55,26 @@ export default function UpdateSerialInfo({
         />
       </Stack>
       <Stack direction={forBelow676 ? "column" : "row"} gap="16px">
-      <Autocomplete
-  multiple
-  options={days} // Provide the full list of days
-  getOptionLabel={(option) => option.label}
-  value={days.filter((day) => consultationDays.includes(day.id))} // Ensure value structure matches options
-  filterSelectedOptions
-  isOptionEqualToValue={(option, value) => option.id === value.id} // Compare based on 'id'
-  onChange={(event, newValue) => {
-    setConsultationDays(newValue.map((day) => day.id)); // Store only the selected IDs in consultationDays
-  }}
-  popupIcon={<ArrowDown color="#727373" size={24} />}
-  sx={{ width: "100%" }}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      variant="outlined"
-      label="Consultation Days"
-    />
-  )}
-/>
-
+        <Autocomplete
+          multiple
+          options={days} // Provide the full list of days
+          getOptionLabel={(option) => option.label}
+          value={days.filter((day) => consultationDays.includes(day.id))} // Ensure value structure matches options
+          filterSelectedOptions
+          isOptionEqualToValue={(option, value) => option.id === value.id} // Compare based on 'id'
+          onChange={(event, newValue) => {
+            setConsultationDays(newValue.map((day) => day.id)); // Store only the selected IDs in consultationDays
+          }}
+          popupIcon={<ArrowDown color="#727373" size={24} />}
+          sx={{ width: "100%" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Consultation Days"
+            />
+          )}
+        />
 
         <TextField
           label="Time"
