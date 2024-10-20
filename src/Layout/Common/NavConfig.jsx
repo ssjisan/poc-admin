@@ -67,7 +67,7 @@ const navConfig = ({ pathname }) => [
       <Doctor
         color={
           pathname.startsWith("/add_doctor") ||
-          pathname.startsWith("/doctor_list")
+          pathname.startsWith("/doctor_list") 
             ? "#00AE60"
             : "#637381"
         }

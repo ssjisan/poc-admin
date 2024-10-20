@@ -1,5 +1,6 @@
 import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
+import UpdateProfile from "../../Components/Doctors/UpdateDoctorProfile/UpdateProfile";
 
 export default function UpdateDoctorProfile() {
   const drawerWidth = 280;
@@ -17,7 +18,7 @@ export default function UpdateDoctorProfile() {
       >
         <Toolbar />
         <Box>
-          Update
+          <UpdateProfile/>
         </Box>
       </Box>
     </Box>

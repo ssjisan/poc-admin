@@ -8,7 +8,7 @@ import {
 import PropTypes from "prop-types";
 import { ArrowDown } from "../../../../assets/IconSet";
 
-export default function SerialInfo({
+export default function UpdateSerialInfo({
   forBelow676,
   location,
   setLocation,
@@ -28,8 +28,14 @@ export default function SerialInfo({
     { id: 6, label: "Thursday", value: "Thursday" },
     { id: 7, label: "Friday", value: "Friday" },
   ];
-  console.log(consultationDays);
-  
+
+  console.log("Consultation Days:", consultationDays);
+  const test = [1, 2, 3];
+  console.log(
+    "Filtered Days:",
+    days.filter((day) => test.includes(day.id))
+  );
+
   return (
     <Stack gap="16px" sx={{ width: "100%" }}>
       <Divider textAlign="left" sx={{ color: "#637381" }}>
@@ -54,27 +60,28 @@ export default function SerialInfo({
         />
       </Stack>
       <Stack direction={forBelow676 ? "column" : "row"} gap="16px">
-        <Autocomplete
-          multiple
-          options={days}
-          getOptionLabel={(option) => option.label}
-          value={days.filter((day) => consultationDays.includes(day.id))}
-          filterSelectedOptions
-          isOptionEqualToValue={(option, value) => option.id === value.id} // Compare by ID
-          // Store IDs in consultationDays state
-          onChange={(event, newValue) => {
-            setConsultationDays(newValue.map((day) => day.id)); // Store selected IDs in state
-          }}
-          popupIcon={<ArrowDown color="#727373" size={24} />}
-          sx={{ width: "100%" }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Consultation Days"
-            />
-          )}
-        />
+      <Autocomplete
+  multiple
+  options={days} // Provide the full list of days
+  getOptionLabel={(option) => option.label}
+  value={days.filter((day) => consultationDays.includes(day.id))} // Ensure value structure matches options
+  filterSelectedOptions
+  isOptionEqualToValue={(option, value) => option.id === value.id} // Compare based on 'id'
+  onChange={(event, newValue) => {
+    setConsultationDays(newValue.map((day) => day.id)); // Store only the selected IDs in consultationDays
+  }}
+  popupIcon={<ArrowDown color="#727373" size={24} />}
+  sx={{ width: "100%" }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      variant="outlined"
+      label="Consultation Days"
+    />
+  )}
+/>
+
+
         <TextField
           label="Time"
           variant="outlined"
@@ -88,7 +95,7 @@ export default function SerialInfo({
   );
 }
 
-SerialInfo.propTypes = {
+UpdateSerialInfo.propTypes = {
   forBelow676: PropTypes.bool.isRequired,
   location: PropTypes.string.isRequired,
   setLocation: PropTypes.func.isRequired,

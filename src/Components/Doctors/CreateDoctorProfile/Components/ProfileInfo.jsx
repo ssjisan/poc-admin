@@ -53,7 +53,7 @@ export default function ProfileInfo() {
       formData.append("detailsInfo", detailsInfo);
       formData.append("location", location);
       formData.append("appointmentNumber", appointmentNumber);
-      formData.append("consultationDays", consultationDays);
+      consultationDays.forEach((day) => formData.append("consultationDays[]", day));
       formData.append("consultationTime", consultationTime);
       if (profilePhoto) {
         formData.append("profilePhoto", profilePhoto); // Append the file directly
