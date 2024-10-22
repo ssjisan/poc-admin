@@ -165,6 +165,15 @@ function Sidebar(props) {
                         ? "#00AE60"
                         : "#637381"
                     }
+                    sx={{
+                      fontSize: "14px",
+                      textTransform: "none", // Prevents uppercase transformation
+                      fontWeight: section.items.some(
+                        (item) => pathname === item.link
+                      )
+                        ? 600
+                        : 500,
+                    }}
                   >
                     {section.title}
                   </Typography>

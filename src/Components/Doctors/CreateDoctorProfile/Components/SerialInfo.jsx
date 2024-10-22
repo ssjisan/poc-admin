@@ -28,7 +28,6 @@ export default function SerialInfo({
     { id: 6, label: "Thursday", value: "Thursday" },
     { id: 7, label: "Friday", value: "Friday" },
   ];
-  console.log(consultationDays);
   
   return (
     <Stack gap="16px" sx={{ width: "100%" }}>

@@ -13,6 +13,7 @@ import WriteABlog from "../Page/Blog/WriteABlog";
 import AddDoctorProfile from "../Page/Doctors/AddDoctorProfile";
 import DoctorsProfile from "../Page/Doctors/DoctorsProfile";
 import UpdateDoctorProfile from "../Page/Doctors/UpdateDoctorProfile";
+import CreateTreatment from "../Page/Treatments/CreateTreatment";
 
 export default function MainRouters() {
   return (
@@ -32,6 +33,7 @@ export default function MainRouters() {
           <Route path="/add_doctor" element={<AddDoctorProfile />} />
           <Route path="/doctor_list" element={<DoctorsProfile />} />
           <Route path="/doctor/:id" element={<UpdateDoctorProfile />} />
+          <Route path="/create_treatment" element={<CreateTreatment/>}/>
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}
       </Routes>

@@ -1,4 +1,4 @@
-import { AlbumList, Blog, Dashboard, Doctor, Video } from "../../assets/IconSet";
+import { AlbumList, Blog, Dashboard, Doctor, Services, Video } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => [
   {
@@ -10,6 +10,30 @@ const navConfig = ({ pathname }) => [
       {
         title: "Dashboard",
         link: "/",
+      },
+    ],
+  },
+  {
+    title: "Treatments",
+    icon: (
+      <Services
+        color={
+          pathname.startsWith("/create_treatment") ||
+          pathname.startsWith("/treatments_list")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Create Treatment",
+        link: "/create_treatment",
+      },
+      {
+        title: "Treatments List",
+        link: "/treatments_list",
       },
     ],
   },
@@ -100,7 +124,7 @@ const navConfig = ({ pathname }) => [
     ),
     items: [
       {
-        title: "Add Blog",
+        title: "Write Blog",
         link: "/write_blog",
       },
       {

@@ -20,6 +20,15 @@ export default function BasicInfo({
   const handleQuillChange = (content) => {
     setDetailsInfo(content);
   };
+  const modules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["bold", "italic", "underline"],
+      ["link"], // Adding image option
+      [{ align: [] }],
+    ],
+  };
 
   return (
     <Stack direction="column" gap="16px" sx={{ width: "100%" }}>
@@ -71,6 +80,7 @@ export default function BasicInfo({
       </Stack>
       <Box>
         <ReactQuill
+          modules={modules}
           className="custom-quill ql-container ql-snow"
           value={detailsInfo}
           onChange={handleQuillChange}
@@ -82,17 +92,17 @@ export default function BasicInfo({
 }
 
 BasicInfo.propTypes = {
-  forBelow676: PropTypes.bool.isRequired, 
-  name: PropTypes.string.isRequired, 
-  setName: PropTypes.func.isRequired, 
-  designation: PropTypes.string.isRequired, 
-  setDesignation: PropTypes.func.isRequired, 
-  email: PropTypes.string.isRequired, 
-  setEmail: PropTypes.func.isRequired, 
+  forBelow676: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  setName: PropTypes.func.isRequired,
+  designation: PropTypes.string.isRequired,
+  setDesignation: PropTypes.func.isRequired,
+  email: PropTypes.string.isRequired,
+  setEmail: PropTypes.func.isRequired,
   phone: PropTypes.string.isRequired,
-  setPhone: PropTypes.func.isRequired, 
-  whatsApp: PropTypes.string.isRequired, 
-  setWhatsApp: PropTypes.func.isRequired, 
-  detailsInfo: PropTypes.string.isRequired, 
-  setDetailsInfo: PropTypes.func.isRequired, 
+  setPhone: PropTypes.func.isRequired,
+  whatsApp: PropTypes.string.isRequired,
+  setWhatsApp: PropTypes.func.isRequired,
+  detailsInfo: PropTypes.string.isRequired,
+  setDetailsInfo: PropTypes.func.isRequired,
 };

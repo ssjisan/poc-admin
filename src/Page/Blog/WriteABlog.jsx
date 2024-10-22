@@ -1,34 +1,18 @@
-import { useState, useRef } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { Quill as GlobalQuill } from 'react-quill';
-import ImageResize from 'quill-image-resize-module-react';
-import { Box, Toolbar } from '@mui/material';
-import Sidebar from '../../Layout/Sidebar';
+import {
+  Box,
+  Grid,
+  Stack,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import Sidebar from "../../Layout/Sidebar";
+import WriteBlogPost from "../../Components/BlogPost/WriteBlog/WriteBlogPost";
 
-// Register Quill modules
-GlobalQuill.register('modules/imageResize', ImageResize);
 export default function WriteABlog() {
   const drawerWidth = 280;
-  const [editorContent, setEditorContent] = useState("");
-  const quillRef = useRef(null);
-  console.log(editorContent);
+  const forBelow1200 = useMediaQuery("(max-width:1200px)");
 
-  const modules = {
-    toolbar: [
-      [{ header: "1" }, { header: "2" }, { header: "3" }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["bold", "italic", "underline"],
-      ["link", "image"], // Adding image option
-      [{ align: [] }],
-      [{ color: [] }, { background: [] }],
-      ["clean"], // Remove formatting
-    ],
-    imageResize: {
-      // Optional configuration options for image resize
-      modules: ['Resize', 'DisplaySize', 'Toolbar'],
-    },
-  };
   return (
     <Box>
       <Sidebar />
@@ -42,15 +26,20 @@ export default function WriteABlog() {
       >
         <Toolbar />
         <Box>
-          <div>
-            <ReactQuill
-              modules={modules} // Add the custom modules
-              ref={quillRef} // Get the Quill instance through the ref
-              value={editorContent}
-              onChange={setEditorContent}
-              theme="snow" // Apply Snow theme
-            />
-          </div>
+          <Box sx={{ p: forBelow1200 ? "24px 0px" : "24px" }}>
+            <Grid container justifyContent="center">
+              <Grid item xs={12} sm={12} md={8} lg={6}>
+                <Stack spacing={5}>
+                  <Stack gap={2} sx={{ pb: "64px", width: "100%" }}>
+                    <Typography variant="h4" sx={{ mb: "40px" }}>
+                      Write a Blog
+                    </Typography>
+                    <WriteBlogPost />
+                  </Stack>
+                </Stack>
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       </Box>
     </Box>

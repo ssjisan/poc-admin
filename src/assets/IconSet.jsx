@@ -1657,6 +1657,41 @@ export const Doctor = ({ color, size }) => {
       }}
     >
       <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="12" cy="6" r="4" fill={color} />
+        <path
+          opacity="0.5"
+          d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+          fill={color}
+        />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M14.5 15.25C14.9142 15.25 15.25 15.5858 15.25 16L15.25 17.25H16.5C16.9142 17.25 17.25 17.5858 17.25 18C17.25 18.4142 16.9142 18.75 16.5 18.75H15.25V20C15.25 20.4142 14.9142 20.75 14.5 20.75C14.0858 20.75 13.75 20.4142 13.75 20L13.75 18.75L12.5 18.75C12.0858 18.75 11.75 18.4142 11.75 18C11.75 17.5858 12.0858 17.25 12.5 17.25H13.75L13.75 16C13.75 15.5858 14.0858 15.25 14.5 15.25Z"
+          fill="white"
+        />
+      </svg>
+    </div>
+  );
+};
+
+export const Services = ({ color, size }) => {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
@@ -1946,6 +1981,10 @@ Camera.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 Avatar.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Services.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
