@@ -14,7 +14,7 @@ export default function BlogCover({ blogCover, handleBlogCover, removeImage }) {
         } // Click on the hidden input when the box is clicked
         sx={{
           width: "100%",
-          height: "320px",
+          height: blogCover ? "480px" : "320px",
           background: "#F6F7F8",
           borderRadius: "8px",
           border: "3px solid #fff",

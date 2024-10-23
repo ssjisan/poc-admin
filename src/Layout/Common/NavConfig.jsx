@@ -1,4 +1,4 @@
-import { AlbumList, Blog, Dashboard, Doctor, Services, Video } from "../../assets/IconSet";
+import { AlbumList, Blog, Dashboard, Doctor, Services, Users, Video } from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => [
   {
@@ -115,7 +115,7 @@ const navConfig = ({ pathname }) => [
       <Blog
         color={
           pathname.startsWith("/write_blog") ||
-          pathname.startsWith("/blog_list")
+          pathname.startsWith("/blog")
             ? "#00AE60"
             : "#637381"
         }
@@ -128,8 +128,32 @@ const navConfig = ({ pathname }) => [
         link: "/write_blog",
       },
       {
-        title: "Blog List",
-        link: "/blog_list",
+        title: "All Blogs",
+        link: "/blog",
+      },
+    ],
+  },
+  {
+    title: "User",
+    icon: (
+      <Users
+        color={
+          pathname.startsWith("/create_user") ||
+          pathname.startsWith("/user_list")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Create User",
+        link: "/create_use",
+      },
+      {
+        title: "User List",
+        link: "/user_list",
       },
     ],
   },

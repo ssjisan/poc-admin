@@ -14,6 +14,12 @@ import AddDoctorProfile from "../Page/Doctors/AddDoctorProfile";
 import DoctorsProfile from "../Page/Doctors/DoctorsProfile";
 import UpdateDoctorProfile from "../Page/Doctors/UpdateDoctorProfile";
 import CreateTreatment from "../Page/Treatments/CreateTreatment";
+import Blog from "../Page/Blog/Blog";
+import AddUser from "../Page/User/AddUser";
+import ChangePassword from "../Page/User/ChangePassword";
+import UserList from "../Page/User/UserList";
+import AllTreatments from "../Page/Treatments/AllTreatments";
+import PreviewBlog from "../Components/BlogPost/PreviewBlog/PreviewBlog";
 
 export default function MainRouters() {
   return (
@@ -34,6 +40,12 @@ export default function MainRouters() {
           <Route path="/doctor_list" element={<DoctorsProfile />} />
           <Route path="/doctor/:id" element={<UpdateDoctorProfile />} />
           <Route path="/create_treatment" element={<CreateTreatment/>}/>
+          <Route path="/treatments_list" element={<AllTreatments />} />
+          <Route path="/blog" element={<Blog/>}/>
+          <Route path="blog/:slug" element={<PreviewBlog/>}/>
+          <Route path="/create_use" element={<AddUser />} />
+          <Route path="change_password" element={<ChangePassword />} />
+          <Route path="user_list" element={<UserList />} />
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}
       </Routes>

@@ -66,8 +66,8 @@ export default function InputFields() {
         }
         setAuth({ ...auth, token: data.token, user: data.user });
         setLoading(false);
-        toast.success("Login Successful");
         navigate("/");
+        toast.success("Login Successful");
       }
     } catch (err) {
       setLoading(false);

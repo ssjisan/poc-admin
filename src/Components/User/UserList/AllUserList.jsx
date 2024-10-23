@@ -1,5 +1,5 @@
-import { Box, Container, Typography } from "@mui/material";
-import UserListTable from "./Components/UserListTable";
+import { Box, Typography } from "@mui/material";
+import UserListTable from "./UserListTable";
 
 export default function AllUserList() {
   return (

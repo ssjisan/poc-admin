@@ -1,16 +1,19 @@
 import { Box, Table, TableContainer } from "@mui/material";
 import Header from "./Table/Header";
 import Body from "./Table/Body";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Pagination from "./Table/Pagination";
+import { DataContext } from "../../../DataProcessing/DataProcessing";
 
 export default function UserListTable() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userRemoveModal, setUserRemoveModal] = useState(false);
+  const { auth } = useContext(DataContext);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -40,23 +43,34 @@ export default function UserListTable() {
   const handleRemove = async (e) => {
     e.preventDefault();
     try {
-      if (selectedUser.email === "ssjisan.dev@gmail.com") {
-        toast.error("Access Denied");
+      // Check if the selected user is the logged-in Super Admin
+      if (selectedUser.role === 0 && selectedUser._id === auth.user._id) {
+        toast.error(
+          "You are a Super Admin, you can't remove your own account."
+        );
         return;
       }
+
+      // Check if the selected user is a Super Admin other than the logged-in user
+      if (selectedUser.role === 0) {
+        toast.error("This account can't be removed");
+        return;
+      }
+
+      // Proceed with the deletion of other users
       const { data } = await axios.delete(`/user/${selectedUser._id}`);
       if (data?.error) {
         toast.error(data.error);
       } else {
         toast.success("Deleted");
-        loadUsers();
         setUserRemoveModal(false);
+        loadUsers();
       }
     } catch (err) {
-      toast.error("Access Denied");
+      toast.error(err.message);
     }
   };
-  
+
   return (
     <Box
       sx={{

@@ -8,16 +8,14 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import { EyeOff, EyeOn } from "../assets/IconSet";
-import { DataContext } from "../DataProcessing/DataProcessing";
-import { useContext, useState } from "react";
+import { EyeOff, EyeOn } from "../../assets/IconSet";
+import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function ChangePasswordForm() {
-  const { auth,setAuth, handleMouseDownPassword } =
-    useContext(DataContext);
+  
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -79,7 +77,6 @@ export default function ChangePasswordForm() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowOldPassword(!showOldPassword)}
-                  onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
                   {showOldPassword ? (
@@ -104,7 +101,6 @@ export default function ChangePasswordForm() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
                   {showNewPassword ? (
@@ -129,7 +125,6 @@ export default function ChangePasswordForm() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
                   {showConfirmPassword ? (
