@@ -45,12 +45,12 @@ export default function MainRouters() {
           <Route path="/add_doctor" element={<AddDoctorProfile />} />
           <Route path="/doctor_list" element={<DoctorsProfile />} />
           <Route path="/doctor/:id" element={<UpdateDoctorProfile />} />
-          <Route path="/create_treatment" element={<CreateTreatment/>}/>
+          <Route path="/create_treatment" element={<CreateTreatment />} />
           <Route path="/treatments_list" element={<AllTreatments />} />
           <Route path="/write_blog" element={<WriteABlog />} />
           {/* <Route path="/edit-blog/:slug" element={<EditBlog/>} /> */}
-          <Route path="/blog" element={<Blog/>}/>
-          <Route path="/blog/:slug" element={<PreviewBlog/>}/>
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<PreviewBlog />} />
 
           <Route path="/add_journal" element={<AddJournal />} />
           <Route path="/journals" element={<JournalList />} />
