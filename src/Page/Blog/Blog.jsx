@@ -1,7 +1,5 @@
 import {
   Box,
-  Grid,
-  Stack,
   Toolbar,
   Typography,
   useMediaQuery,

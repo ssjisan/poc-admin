@@ -8,11 +8,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import PropTypes from "prop-types";
 import { Edit, EyeBold, More, Remove } from "../../../../assets/IconSet";
-import RemoveBlog from "../../RemoveBlog/RemoveBlog";
 
 export default function BlogCard({
   data,
@@ -20,48 +17,11 @@ export default function BlogCard({
   handleCloseMenu,
   openAnchorEl,
   handlePreview,
-  onDeleteBlog, // Callback to handle blog deletion after confirmation
+  formattedDate,
+  categoryTitle,
+  showConfirmationModal,
+  redirectEdit,
 }) {
-  const [treatments, setTreatments] = useState([]);
-  const [categoryTitle, setCategoryTitle] = useState("");
-  const [openRemoveModal, setOpenRemoveModal] = useState(false); // State for delete confirmation modal
-
-  useEffect(() => {
-    loadTreatments();
-  }, []);
-
-  const loadTreatments = async () => {
-    try {
-      const { data: treatmentData } = await axios.get("/treatments_list");
-      setTreatments(treatmentData);
-
-      const matchedTreatment = treatmentData.find(
-        (treatment) => treatment._id === data.category
-      );
-      setCategoryTitle(
-        matchedTreatment ? matchedTreatment.title : "Unknown Category"
-      );
-    } catch (err) {
-      toast.error("Can't load treatment lists");
-    }
-  };
-
-  const formattedDate = new Date(data.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
-  // Function to open the delete confirmation modal
-  const handleOpenDeleteModal = () => {
-    setOpenRemoveModal(true);
-  };
-
-  // Function to close the delete confirmation modal
-  const handleCloseDeleteModal = () => {
-    setOpenRemoveModal(false);
-  };
-
   return (
     <Stack
       justifyContent="flex-start"
@@ -83,7 +43,7 @@ export default function BlogCard({
             fontWeight: 700,
           }}
         />
-        <IconButton onClick={(event) => handleOpenMenu(event, data._id)}>
+        <IconButton onClick={(event) => handleOpenMenu(event, data)}>
           <More color="rgba(145, 158, 171,1)" size={24} />
         </IconButton>
       </Stack>
@@ -94,8 +54,8 @@ export default function BlogCard({
         {formattedDate}
       </Typography>
       <Stack direction="row" gap="8px" alignItems="center">
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        <Typography variant="body1">Sadman Sakib Jisan</Typography>
+        <Avatar alt={data.authorName} src={data.authorImage} />
+        <Typography variant="body1">{data.authorName}</Typography>
       </Stack>
       <Popover
         open={Boolean(openAnchorEl)}
@@ -114,7 +74,7 @@ export default function BlogCard({
       >
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
-          onClick={() => handlePreview(data.slug)}
+          onClick={() => handlePreview(data.slug)} // Ensure this is set correctly
         >
           <EyeBold color="#919EAB" size={20} />
           Preview
@@ -132,20 +92,34 @@ export default function BlogCard({
             gap: "8px",
             borderRadius: "8px",
           }}
-          onClick={handleOpenDeleteModal} // Open the modal when Delete is clicked
+          onClick={() => {
+            handleCloseMenu();
+            showConfirmationModal(); // Call showConfirmationModal
+          }} 
         >
           <Remove color="red" size={20} /> Delete
         </MenuItem>
       </Popover>
-
-      {/* Render the RemoveBlog modal */}
-      <RemoveBlog
-        open={openRemoveModal}
-        handleClose={handleCloseDeleteModal}
-        blogId={data._id}
-        blogTitle={data.title}
-        onDelete={onDeleteBlog} // Callback when blog is deleted
-      />
     </Stack>
   );
 }
+
+BlogCard.propTypes = {
+  data: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    authorName: PropTypes.string.isRequired,
+    authorImage: PropTypes.string,
+    category: PropTypes.string,
+  }).isRequired,
+  handleOpenMenu: PropTypes.func.isRequired,
+  handleCloseMenu: PropTypes.func.isRequired,
+  openAnchorEl: PropTypes.object,
+  handlePreview: PropTypes.func.isRequired,
+  categoryTitle: PropTypes.string.isRequired,
+  formattedDate: PropTypes.string.isRequired,
+  showConfirmationModal: PropTypes.func.isRequired,
+  redirectEdit: PropTypes.func.isRequired,
+};

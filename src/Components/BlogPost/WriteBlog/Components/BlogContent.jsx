@@ -3,11 +3,7 @@ import ReactQuill from "react-quill";
 import PropTypes from "prop-types";
 import "react-quill/dist/quill.snow.css";
 
-export default function BlogContent({
-  blogContent,
-  setBlogContent,
-  handleQuillChange,
-}) {
+export default function BlogContent({ blogContent, handleQuillChange }) {
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }],
@@ -34,3 +30,15 @@ export default function BlogContent({
     </Stack>
   );
 }
+
+// Define PropTypes
+BlogContent.propTypes = {
+  blogContent: PropTypes.string.isRequired,
+  setBlogContent: PropTypes.func.isRequired,
+  handleQuillChange: PropTypes.func.isRequired,
+};
+
+// Default Props (optional)
+BlogContent.defaultProps = {
+  blogContent: "",
+};

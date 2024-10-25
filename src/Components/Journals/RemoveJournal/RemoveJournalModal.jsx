@@ -3,14 +3,14 @@ import Modal from "@mui/material/Modal";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Warning } from "../../../assets/IconSet";
 
-export default function RemoveBlog({
-  handleCloseRemoveBlog,
-  confirmationModalOpen,
-  blogTitle,
-  handleConfirmRemove,
+export default function RemoveJournalModal({
+  isOpen,
+  handleClose,
+  journalTitle,
+  handleRemove,
 }) {
   return (
-    <Modal open={confirmationModalOpen} onClose={handleCloseRemoveBlog}>
+    <Modal open={isOpen} onClose={handleClose}>
       <div
         style={{
           position: "absolute",
@@ -30,7 +30,7 @@ export default function RemoveBlog({
           }}
         >
           <Typography variant="h6" gutterBottom>
-            Delete Blog Post
+            Delete Journal
           </Typography>
         </Box>
         <Stack
@@ -44,7 +44,7 @@ export default function RemoveBlog({
           <Warning size="48px" color="#dc3545" />
           <Typography variant="body1" sx={{ textAlign: "center" }}>
             Are you sure you want to delete{" "}
-            <strong>&quot;{blogTitle}&quot;</strong>?
+            <strong>&quot;{journalTitle}&quot;</strong>?
           </Typography>
         </Stack>
         <Stack
@@ -53,14 +53,10 @@ export default function RemoveBlog({
           justifyContent={"flex-end"}
           sx={{ p: "16px", borderTop: "1px solid rgba(145, 158, 171, 0.24)" }}
         >
-          <Button onClick={handleCloseRemoveBlog} color="inherit">
+          <Button onClick={handleClose} color="inherit">
             Cancel
           </Button>
-          <Button
-            onClick={handleConfirmRemove} // Call the function to delete the blog
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleRemove} variant="contained" color="error">
             Yes, Delete
           </Button>
         </Stack>
@@ -69,9 +65,9 @@ export default function RemoveBlog({
   );
 }
 
-RemoveBlog.propTypes = {
-  handleCloseRemoveBlog: PropTypes.func.isRequired,
-  confirmationModalOpen: PropTypes.bool.isRequired,
-  blogTitle: PropTypes.string.isRequired,
-  handleConfirmRemove: PropTypes.func.isRequired,
+RemoveJournalModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  journalTitle: PropTypes.string.isRequired,
 };

@@ -1,10 +1,12 @@
 import { Button, Stack, useMediaQuery } from "@mui/material";
 import BlogCover from "./Components/BlogCover";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import BlogInfo from "./Components/BlogInfo";
 import axios from "axios";
 import BlogContent from "./Components/BlogContent";
+import { DataContext } from "../../../DataProcessing/DataProcessing";
+import { useNavigate } from "react-router-dom";
 
 export default function WriteBlogPost() {
   const forBelow1200 = useMediaQuery("(max-width:1200px)");
@@ -13,6 +15,9 @@ export default function WriteBlogPost() {
   const [selectedCategory, setSelectedCategory] = useState(null); // Selected category
   const [blogTitle, setBlogTitle] = useState(""); // Blog title
   const [blogContent, setBlogContent] = useState(""); // Blog content
+  const { auth } = useContext(DataContext); // Access the authentication context
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission status
 
   // Upload Cover Image Handler
   const handleBlogCover = (event) => {
@@ -63,49 +68,60 @@ export default function WriteBlogPost() {
       return;
     }
 
+    setIsSubmitting(true);
+    toast.loading("Uploading blog...");
+
     const formData = new FormData();
     formData.append("title", blogTitle);
     formData.append("categoryId", selectedCategory._id); // Assuming category has an _id
-    formData.append("editorData", blogContent);
+    formData.append("editorData", JSON.stringify(blogContent)); // Serialize editor data
 
     if (blogCover) {
       formData.append("coverPhoto", blogCover); // Add the image file to the form data
     }
 
-    // Log the FormData before sending (for debugging purposes)
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
+    // Get the email from the auth context
+    const userEmail = auth?.user?.email; // Access user email from auth context
+    if (userEmail) {
+      formData.append("email", userEmail); // Send email in the request
+    } else {
+      toast.error("User email not found.");
+      setIsSubmitting(false);
+      return;
     }
 
     try {
       const response = await axios.post("/write-blog", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: auth.token, // Include the token from the context
+        },
       });
 
       if (response.status === 201) {
+        navigate("/blog");
+        toast.dismiss();
         toast.success("Blog created successfully!");
-        // Reset form after success
-        setBlogTitle("");
-        setSelectedCategory(null);
-        setBlogContent("");
-        setBlogCover(null);
       } else {
+        toast.dismiss();
         toast.error("Failed to create blog post.");
       }
     } catch (error) {
+      toast.dismiss();
       if (error.response) {
-        // Server responded with a status other than 2xx
         console.error("Server Error:", error.response.data);
-        toast.error(`Server error: ${error.response.data.message || "Unknown error"}`);
+        toast.error(
+          `Server error: ${error.response.data.message || "Unknown error"}`
+        );
       } else if (error.request) {
-        // Request was made but no response was received
         console.error("No response from server:", error.request);
         toast.error("No response from server.");
       } else {
-        // Something else caused the error
         console.error("Error submitting blog post:", error.message);
         toast.error(`Error: ${error.message}`);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -145,11 +161,21 @@ export default function WriteBlogPost() {
           borderTop: "1px solid rgba(145, 142, 175, 0.4)",
         }}
       >
-        <Button variant="outlined" color="inherit" onClick={() => window.history.back()}>
+        <Button
+          variant="outlined"
+          color="inherit"
+          onClick={() => window.history.back()}
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Create
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Creating..." : "Create"}
         </Button>
       </Stack>
     </>

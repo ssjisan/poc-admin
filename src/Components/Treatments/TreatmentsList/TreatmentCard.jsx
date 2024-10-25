@@ -1,7 +1,12 @@
 import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
-export default function TreatmentCard({ data, setMaxHeight, maxHeight }) {
+export default function TreatmentCard({
+  data,
+  setMaxHeight,
+  maxHeight,
+  toggleDrawer,
+}) {
   const cardRef = useRef();
   const forBelow600 = useMediaQuery("(min-width:600px)");
   const forBelow580 = useMediaQuery("(max-width:580px)");
@@ -34,11 +39,19 @@ export default function TreatmentCard({ data, setMaxHeight, maxHeight }) {
           {data.subTitle}
         </Typography>
       </Stack>
-      <Stack gap="12px" direction={forBelow580 ? "column" : "row"} sx={{ width: "100%" }}>
+      <Stack
+        gap="12px"
+        direction={forBelow580 ? "column" : "row"}
+        sx={{ width: "100%" }}
+      >
         <Button color="error" variant="outlined" sx={{ width: "100%" }}>
           Delete
         </Button>
-        <Button variant="contained" sx={{ width: "100%" }}>
+        <Button
+          variant="contained"
+          sx={{ width: "100%" }}
+          onClick={() => toggleDrawer(data)} // Pass specific profile
+        >
           Edit
         </Button>
       </Stack>

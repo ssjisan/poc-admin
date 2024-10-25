@@ -1,4 +1,14 @@
-import { AlbumList, Blog, Dashboard, Doctor, Services, Users, Video } from "../../assets/IconSet";
+import {
+  AlbumList,
+  Blog,
+  Dashboard,
+  Doctor,
+  Form,
+  JournalList,
+  Services,
+  Users,
+  Video,
+} from "../../assets/IconSet";
 
 const navConfig = ({ pathname }) => [
   {
@@ -91,7 +101,7 @@ const navConfig = ({ pathname }) => [
       <Doctor
         color={
           pathname.startsWith("/add_doctor") ||
-          pathname.startsWith("/doctor_list") 
+          pathname.startsWith("/doctor_list")
             ? "#00AE60"
             : "#637381"
         }
@@ -114,8 +124,7 @@ const navConfig = ({ pathname }) => [
     icon: (
       <Blog
         color={
-          pathname.startsWith("/write_blog") ||
-          pathname.startsWith("/blog")
+          pathname.startsWith("/write_blog") || pathname.startsWith("/blog")
             ? "#00AE60"
             : "#637381"
         }
@@ -130,6 +139,53 @@ const navConfig = ({ pathname }) => [
       {
         title: "All Blogs",
         link: "/blog",
+      },
+    ],
+  },
+  {
+    title: "Journals",
+    icon: (
+      <JournalList
+        color={
+          pathname.startsWith("/add_journal") ||
+          pathname.startsWith("/journals")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Add Journal",
+        link: "/add_journal",
+      },
+      {
+        title: "All Journals",
+        link: "/journals",
+      },
+    ],
+  },
+  {
+    title: "Forms",
+    icon: (
+      <Form
+        color={
+          pathname.startsWith("/upload_form") || pathname.startsWith("/forms")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Upload Form",
+        link: "/upload_form",
+      },
+      {
+        title: "Form List",
+        link: "/forms",
       },
     ],
   },

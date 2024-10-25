@@ -65,7 +65,6 @@ export default function TableViewer() {
   };
 
   const removeVideo = async (id) => {
-    console.log(id);
 
     try {
       // Show loading toast
