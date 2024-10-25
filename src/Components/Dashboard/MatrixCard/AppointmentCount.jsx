@@ -1,23 +1,23 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { MatrixIconDoctor } from "../../../assets/Icons/MatrixIconDoctor";
+import { MatrixIconAppointment } from "../../../assets/Icons/MatrixIconAppointment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default function DoctorCount() {
-  const [profiles, setProfiles] = useState([]);
+export default function AppointmentCount() {
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-      loadProfiles();
-    }, []);
-    const loadProfiles = async () => {
-      try {
-        const { data } = await axios.get("/doctors");
-        setProfiles(data);
-      } catch (err) {
-        toast.error("Problem loading doctors profile");
-      }
-    };
+    loadProfiles();
+  }, []);
+  const loadProfiles = async () => {
+    try {
+      const { data } = await axios.get("/appointments");
+      setAppointments(data);
+    } catch (err) {
+      toast.error("Problem loading Appointments");
+    }
+  };
   return (
     <Box
       sx={{
@@ -31,11 +31,11 @@ export default function DoctorCount() {
         alignItems: "center",
       }}
     >
-      <MatrixIconDoctor />
+      <MatrixIconAppointment />
       <Stack>
-        <Typography variant="h4">{profiles.length}</Typography>
+        <Typography variant="h4">{appointments.length}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
-          Total Doctors
+          Total Appointment
         </Typography>
       </Stack>
     </Box>

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import PropTypes from "prop-types";
-import { Update, Remove, More, Edit } from "../../../../assets/IconSet";
+import { Remove, More, Edit } from "../../../../assets/IconSet";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";

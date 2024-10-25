@@ -95,7 +95,7 @@ export default function BlogCard({
           onClick={() => {
             handleCloseMenu();
             showConfirmationModal(); // Call showConfirmationModal
-          }} 
+          }}
         >
           <Remove color="red" size={20} /> Delete
         </MenuItem>

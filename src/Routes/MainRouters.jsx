@@ -27,6 +27,7 @@ import UpdateJournal from "../Page/Journal/UpdateJournal";
 import AddForm from "../Page/Forms/AddForm";
 import FormList from "../Page/Forms/FormList";
 import UpdateForm from "../Page/Forms/UpdateForm";
+import Appointments from "../Page/Appointments/Appointments";
 
 export default function MainRouters() {
   return (
@@ -63,6 +64,7 @@ export default function MainRouters() {
           <Route path="/create_use" element={<AddUser />} />
           <Route path="change_password" element={<ChangePassword />} />
           <Route path="user_list" element={<UserList />} />
+          <Route path="/appointments" element={<Appointments />} />
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}
       </Routes>

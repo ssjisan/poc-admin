@@ -1,6 +1,7 @@
 import {
   AlbumList,
   Blog,
+  Calender,
   Dashboard,
   Doctor,
   Form,
@@ -20,6 +21,18 @@ const navConfig = ({ pathname }) => [
       {
         title: "Dashboard",
         link: "/",
+      },
+    ],
+  },
+  {
+    title: "Appointments",
+    icon: (
+      <Calender color={pathname === "/appointments" ? "#00AE60" : "#637381"} size={20} />
+    ),
+    items: [
+      {
+        title: "Appointments",
+        link: "/appointments",
       },
     ],
   },
