@@ -38,7 +38,9 @@ export default function UpdateMarkedAlbum() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
+    setIsLoading(true); // Start loading state
+
+    const loadingToastId = toast.loading("Updating album..."); // Show loading toast
 
     try {
       const formData = new FormData();
@@ -68,13 +70,14 @@ export default function UpdateMarkedAlbum() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success(data.message);
+      toast.success(data.message); // Show success message
       navigate("/album_list"); // Redirect after success
     } catch (err) {
       console.error("Error updating album:", err);
-      toast.error("Failed to update album");
+      toast.error("Failed to update album"); // Show error message
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // End loading state
+      toast.dismiss(loadingToastId); // Dismiss loading toast
     }
   };
 

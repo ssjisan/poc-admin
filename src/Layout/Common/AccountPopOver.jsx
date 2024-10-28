@@ -113,7 +113,7 @@ export default function AccountPopOver() {
               {auth?.user?.name}
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              {auth?.user?.role === 0 ? "Modarator" : "Admin"}
+              {auth?.user?.role === 0 ? "Super Admin" : "Admin"}
             </Typography>
           </Box>
           <Divider variant="middle" sx={{ borderStyle: "dashed" }} />

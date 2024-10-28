@@ -11,6 +11,7 @@ export default function UploadNewAlbum() {
   const [isSubmitting, setIsSubmitting] = useState(false); // State for create button loading
   const [albumName, setAlbumName] = useState(""); // State for album name
   const navigate = useNavigate();
+  
   // Handle image uploads
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -42,7 +43,8 @@ export default function UploadNewAlbum() {
       return;
     }
 
-    setIsSubmitting(true); // Show CircularProgress on create button
+    setIsSubmitting(true); // Show loading state
+    const loadingToastId = toast.loading("Uploading album..."); // Start loading toast
 
     // Prepare form data
     const formData = new FormData();
@@ -85,6 +87,7 @@ export default function UploadNewAlbum() {
       }
     } finally {
       setIsSubmitting(false); // Re-enable button after submission
+      toast.dismiss(loadingToastId); // Dismiss loading toast
     }
   };
 
