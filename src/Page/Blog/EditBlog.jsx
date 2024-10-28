@@ -30,7 +30,7 @@ export default function EditBlog() {
             <Grid container justifyContent="center">
               <Grid item xs={12} sm={12} md={8} lg={6}>
                 <Stack spacing={5}>
-                  <Stack gap={2} sx={{ pb: "64px", width: "100%" }}>
+                  <Stack gap={2} sx={{ width: "100%" }}>
                     <Typography variant="h4" sx={{ mb: "40px" }}>
                       Edit Blog
                     </Typography>

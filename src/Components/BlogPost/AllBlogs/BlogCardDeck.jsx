@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import BlogCard from "./BlogCard";
 import { useNavigate } from "react-router-dom";
-import RemoveBlog from "../../RemoveBlog/RemoveBlog";
+import RemoveBlog from "../RemoveBlog/RemoveBlog";
 
 export default function BlogCardDeck() {
   const [blogs, setBlogs] = useState([]);
@@ -79,9 +79,9 @@ export default function BlogCardDeck() {
     }
   };
 
-  // const redirectEdit = (data) => {
-  //   navigate(`/edit-blog/${data.slug}`);
-  // };
+  const redirectEdit = (slug) => {
+    navigate(`/edit-blog/${slug}`);
+  };
 
   return (
     <Grid container spacing={3}>
@@ -103,7 +103,7 @@ export default function BlogCardDeck() {
         );
 
         return (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={data._id}>
+          <Grid item xs={12} sm={6} md={4} lg={4} key={data._id}>
             <BlogCard
               data={data}
               handleOpenMenu={handleOpenMenu}
@@ -113,6 +113,7 @@ export default function BlogCardDeck() {
               formattedDate={formattedDate}
               categoryTitle={categoryTitle}
               showConfirmationModal={() => showConfirmationModal(data)}
+              redirectEdit={redirectEdit}
             />
           </Grid>
         );

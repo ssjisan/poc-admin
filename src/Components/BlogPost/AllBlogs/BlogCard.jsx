@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { Edit, EyeBold, More, Remove } from "../../../../assets/IconSet";
+import { Edit, EyeBold, More, Remove } from "../../../assets/IconSet";
 
 export default function BlogCard({
   data,
@@ -81,6 +81,10 @@ export default function BlogCard({
         </MenuItem>
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
+          onClick={() => {
+            handleCloseMenu();
+            redirectEdit(data.slug); // Call redirectEdit with the blog's slug
+          }}
         >
           <Edit color="#919EAB" size={20} />
           Edit

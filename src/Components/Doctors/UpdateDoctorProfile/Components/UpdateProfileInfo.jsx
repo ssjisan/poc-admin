@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import UpdateProfileImage from "./UpdateProfileImage";
 import UpdateSerialInfo from "./UpdateSerialInfo";
 import { useNavigate, useParams } from "react-router-dom";
@@ -71,6 +66,7 @@ export default function UpdateProfileInfo() {
   // Handle Form Submit
   const handleSubmit = async () => {
     setCreating(true);
+    const toastId = toast.loading("Updating doctor profile..."); // Show loading toast
     const formData = new FormData();
 
     // Append all fields
@@ -82,7 +78,9 @@ export default function UpdateProfileInfo() {
     formData.append("detailsInfo", detailsInfo);
     formData.append("location", location);
     formData.append("appointmentNumber", appointmentNumber);
-    consultationDays.forEach((day) => formData.append("consultationDays[]", day));
+    consultationDays.forEach((day) =>
+      formData.append("consultationDays[]", day)
+    );
     formData.append("consultationTime", consultationTime);
 
     // Check if a new image is uploaded
@@ -98,16 +96,17 @@ export default function UpdateProfileInfo() {
       });
 
       if (response.status === 200) {
-        toast.success("Profile updated successfully");
+        toast.success("Profile updated successfully", { id: toastId }); // Show success toast
         navigate("/doctor_list");
       } else {
         throw new Error("Profile update failed");
       }
     } catch (err) {
-      toast.error("Failed to update profile");
+      toast.error("Failed to update profile", { id: toastId }); // Show error toast
       console.error("Update error:", err); // Logs the actual error
     } finally {
       setCreating(false);
+      toast.dismiss(toastId); // Dismiss the loading toast
     }
   };
 
@@ -166,6 +165,7 @@ export default function UpdateProfileInfo() {
         <Button
           variant="outlined"
           color="inherit"
+          disabled={creating}
           onClick={() => navigate("/doctor_list")}
         >
           Cancel

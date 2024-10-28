@@ -34,7 +34,7 @@ export default function PreviewBlog() {
   });
   return (
     <Box>
-      <BlogTopBar />
+      <BlogTopBar slug={slug}/>
       <Container
         sx={{ mt: "64px", mb: "64px", width: "960px", maxWidth: "100%" }}
       >

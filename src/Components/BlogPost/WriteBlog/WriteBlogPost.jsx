@@ -13,7 +13,7 @@ export default function WriteBlogPost() {
   const [blogCover, setBlogCover] = useState("");
   const [categories, setCategories] = useState([]); // Store category options
   const [selectedCategory, setSelectedCategory] = useState(null); // Selected category
-  const [blogTitle, setBlogTitle] = useState(""); // Blog title
+  const [blogTitle, setBlogTitle] = useState(null); // Blog title
   const [blogContent, setBlogContent] = useState(""); // Blog content
   const { auth } = useContext(DataContext); // Access the authentication context
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export default function WriteBlogPost() {
     const formData = new FormData();
     formData.append("title", blogTitle);
     formData.append("categoryId", selectedCategory._id); // Assuming category has an _id
-    formData.append("editorData", JSON.stringify(blogContent)); // Serialize editor data
+    formData.append("editorData", blogContent); // Serialize editor data
 
     if (blogCover) {
       formData.append("coverPhoto", blogCover); // Add the image file to the form data

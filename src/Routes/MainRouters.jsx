@@ -15,7 +15,7 @@ import DoctorsProfile from "../Page/Doctors/DoctorsProfile";
 import UpdateDoctorProfile from "../Page/Doctors/UpdateDoctorProfile";
 import CreateTreatment from "../Page/Treatments/CreateTreatment";
 import Blog from "../Page/Blog/Blog";
-// import EditBlog from "../Page/Blog/EditBlog";
+import EditBlog from "../Page/Blog/EditBlog";
 import AddUser from "../Page/User/AddUser";
 import ChangePassword from "../Page/User/ChangePassword";
 import UserList from "../Page/User/UserList";
@@ -72,7 +72,7 @@ export default function MainRouters() {
           <Route path="/create_treatment" element={<CreateTreatment />} />
           <Route path="/treatments_list" element={<AllTreatments />} />
           <Route path="/write_blog" element={<WriteABlog />} />
-          {/* <Route path="/edit-blog/:slug" element={<EditBlog/>} /> */}
+          <Route path="/edit-blog/:slug" element={<EditBlog/>} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<PreviewBlog />} />
 

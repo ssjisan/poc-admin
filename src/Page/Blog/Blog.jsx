@@ -1,11 +1,6 @@
-import {
-  Box,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
-import BlogCardDeck from "../../Components/BlogPost/AllBlogs/Components/BlogCardDeck";
+import BlogCardDeck from "../../Components/BlogPost/AllBlogs/BlogCardDeck";
 
 export default function Blog() {
   const drawerWidth = 280;
@@ -28,7 +23,7 @@ export default function Blog() {
             <Typography variant="h4" sx={{ mb: "40px" }}>
               All Blog
             </Typography>
-            <BlogCardDeck/>
+            <BlogCardDeck />
           </Box>
         </Box>
       </Box>
