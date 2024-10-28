@@ -16,10 +16,12 @@ export default function UpdateVideoForm() {
   // State to store video data
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
+  const [image, setImage] = useState(null);
+  const [thumbnail, setThumbnail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [embedUrl, setEmbedUrl] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
+  const [videoType, setVideoType] = useState("");
   const navigate = useNavigate();
   const params = useParams();
 
@@ -32,24 +34,48 @@ export default function UpdateVideoForm() {
       const { data } = await axios.get(`/video/${params.slug}`);
       setVideoTitle(data.title);
       setVideoUrl(data.url);
-      setEmbedUrl(convertToEmbedUrl(data.url)); // Set initial embed URL
+      const videoData = extractVideoId(data.url);
+      setEmbedUrl(convertToEmbedUrl(videoData)); // Set initial embed URL
+      setVideoType(videoData?.type || "");
+      if (
+        data.thumbnail &&
+        Array.isArray(data.thumbnail) &&
+        data.thumbnail.length > 0
+      ) {
+        setThumbnail(data.thumbnail[0].url);
+      } else {
+        setThumbnail("");
+      }
     } catch (err) {
       toast.error("Failed to load video data");
     }
   };
 
-  // Helper function to convert YouTube video URL to embed URL
-  const convertToEmbedUrl = (url) => {
-    const videoId = extractVideoId(url);
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+  // Helper function to extract video ID from YouTube or Google Drive URL
+  const extractVideoId = (url) => {
+    const youtubeRegex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const googleDriveRegex =
+      /(?:https:\/\/)?(?:drive\.google\.com\/file\/d\/|drive\.google\.com\/open\?id=)([a-zA-Z0-9_-]+)/;
+
+    const youtubeMatch = url.match(youtubeRegex);
+    const googleDriveMatch = url.match(googleDriveRegex);
+
+    if (youtubeMatch) {
+      return { id: youtubeMatch[1], type: "youtube" };
+    }
+    if (googleDriveMatch) {
+      return { id: googleDriveMatch[1], type: "google-drive" };
+    }
+    return null;
   };
 
-  // Helper function to extract YouTube video ID from the URL
-  const extractVideoId = (url) => {
-    const videoIdRegex =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(videoIdRegex);
-    return match ? match[1] : null;
+  // Helper function to convert video URL to an embed URL based on type
+  const convertToEmbedUrl = (videoData) => {
+    if (!videoData) return "";
+    return videoData.type === "youtube"
+      ? `https://www.youtube.com/embed/${videoData.id}`
+      : `https://drive.google.com/file/d/${videoData.id}/preview`;
   };
 
   // Handler for video URL input change
@@ -61,30 +87,63 @@ export default function UpdateVideoForm() {
       setIsLoading(true); // Show loader while video is being processed
 
       // Update embed URL when user changes the video URL
-      const newEmbedUrl = convertToEmbedUrl(newUrl);
-      setEmbedUrl(newEmbedUrl);
+      const videoData = extractVideoId(newUrl);
+      setEmbedUrl(convertToEmbedUrl(videoData));
+      setVideoType(videoData?.type || "");
       setIsLoading(false);
     } else {
       setEmbedUrl(""); // Clear embed URL if input is empty
+      setVideoType("");
       setIsLoading(false);
     }
   };
 
+  // Handle thumbnail change
+  const handleThumbnailChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]); // Set new image file
+      setThumbnail(URL.createObjectURL(e.target.files[0])); // Preview the new image
+    }
+  };
   const handleUpdate = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     setUploading(true); // Indicate that the update is in progress
 
+    // Show the loading toast
+    const loadingToastId = toast.loading("Updating video...");
+
     try {
-      await axios.put(`/video/${params.slug}`, {
-        title: videoTitle,
-        url: videoUrl,
+      const formData = new FormData();
+      formData.append("title", videoTitle);
+      formData.append("url", videoUrl);
+
+      // Append the image file if it exists
+      if (image) {
+        formData.append("thumbnail", image); // Use the image file here
+      }
+
+      const { data } = await axios.put(`/video/${params.slug}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      navigate(`/video_list`); // Redirect to the updated video page or list
-      toast.success("Video updated successfully!");
+      // Handle error response from the server
+      if (data?.err) {
+        toast.error("Video update failed", {
+          id: loadingToastId, // Close the loading toast and show error message
+        });
+      } else {
+        toast.success("Video updated successfully", {
+          id: loadingToastId, // Close the loading toast and show success message
+        });
+        navigate("/video_list");
+      }
     } catch (err) {
-      setError("Failed to update video. Please try again.");
-      toast.error("Failed to update video");
+      // Show error message if request fails
+      toast.error(`Update failed: ${err.message}`, {
+        id: loadingToastId, // Close the loading toast and show error message
+      });
     } finally {
       setUploading(false); // Reset uploading state
     }
@@ -105,13 +164,68 @@ export default function UpdateVideoForm() {
           sx={{ mb: 3 }}
         />
         <TextField
-          label="YouTube Video Link"
+          label="YouTube or Google Drive Video Link"
           variant="outlined"
           fullWidth
           value={videoUrl}
           onChange={handleVideoUrlChange}
-          placeholder="Paste a YouTube video link here"
+          placeholder="Paste a YouTube or Google Drive video link here"
         />
+
+        {/* Thumbnail upload section if video is Google Drive */}
+        {videoType === "google-drive" && (
+          <Stack gap="16px">
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              Thumbnail
+            </Typography>
+            <Box
+              sx={{
+                width: "320px",
+                height: "180px",
+                background: "#F6F7F8",
+                borderRadius: "8px",
+                border: "3px solid #fff",
+                boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.12)",
+                position: "relative",
+                overflow: "hidden",
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onClick={() =>
+                document.getElementById("thumbnail-upload-input").click()
+              }
+            >
+              {thumbnail ? (
+                <img
+                  src={thumbnail}
+                  alt="Video Thumbnail"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <Stack sx={{ textAlign: "center" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "#919EAB",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Click here to upload a thumbnail
+                  </Typography>
+                </Stack>
+              )}
+              <input
+                type="file"
+                hidden
+                id="thumbnail-upload-input"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+              />
+            </Box>
+          </Stack>
+        )}
 
         {/* Video Preview Section */}
         <Stack
@@ -145,7 +259,7 @@ export default function UpdateVideoForm() {
                 frameBorder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                title="YouTube Video Preview"
+                title="Video Preview"
               />
             </Stack>
           ) : (
@@ -156,17 +270,10 @@ export default function UpdateVideoForm() {
 
           {!embedUrl && !isLoading && (
             <Typography variant="body1" color={"text.secondary"}>
-              Paste a YouTube video link to preview it here.
+              Paste a YouTube or Google Drive video link to preview it here.
             </Typography>
           )}
         </Stack>
-
-        {error && (
-          <Typography variant="body2" color="error">
-            {error}
-          </Typography>
-        )}
-
         <Button
           variant="contained"
           type="submit"

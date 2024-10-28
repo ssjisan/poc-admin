@@ -24,6 +24,9 @@ export default function VideoPlay({ videoOpen, handleVideoClose, source }) {
     } else if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1];
       return `https://www.youtube.com/embed/${videoId}`;
+    } else if (url.includes("drive.google.com/file/d/")) {
+      const videoId = url.split("/d/")[1].split("/")[0]; // Extract the video ID
+      return `https://drive.google.com/file/d/${videoId}/preview`; // Use preview for embedding
     }
     return ""; // Return an empty string if the format is not recognized
   };
@@ -80,7 +83,7 @@ export default function VideoPlay({ videoOpen, handleVideoClose, source }) {
             }}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            title="YouTube Video Preview"
+            title="Video Preview"
           />
         </Box>
       </Box>

@@ -43,8 +43,11 @@ export default function Body({
             {videos
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((data, index) => {
-                const videoId = getVideoId(data.url); // Get video ID
-                const thumb = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                const videoId = getVideoId(data.url); // Get video ID from URL
+                const thumb =
+                  data.videoType === "google-drive"
+                    ? data.thumbnail[0]?.url
+                    : `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
                 return (
                   <Draggable
                     key={data._id}
@@ -80,7 +83,7 @@ export default function Body({
                               }}
                             >
                               <img
-                                src={thumb}
+                                src={thumb} // Reference the thumbnail URL here
                                 alt="First Image"
                                 width="100%"
                                 height="100%"
@@ -91,6 +94,9 @@ export default function Body({
                               {data.title}
                             </Typography>
                           </Stack>
+                        </TableCell>
+                        <TableCell align="left" sx={{ p: "16px" }}>
+                          {data.videoType}
                         </TableCell>
                         <TableCell align="left" sx={{ p: "16px" }}>
                           {formatDate(data.createdAt)}

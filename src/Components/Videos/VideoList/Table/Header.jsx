@@ -7,6 +7,7 @@ export default function Header() {
       <TableRow>
         <TableCell align="center" sx={{ width: "64px" }}></TableCell>
         <TableCell align="left" >Video Title</TableCell>
+        <TableCell align="left" >Source</TableCell>
         <TableCell align="left" sx={{ width: "240px" }}>
           Upload Date
         </TableCell>

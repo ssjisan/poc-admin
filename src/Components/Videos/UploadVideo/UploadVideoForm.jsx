@@ -19,66 +19,107 @@ export default function UploadVideoForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [embedUrl, setEmbedUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [thumbnail, setThumbnail] = useState(null);
+  const [videoType, setVideoType] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate()
-  // Helper function to extract YouTube video ID from the URL
+  const navigate = useNavigate();
+
   const extractVideoId = (url) => {
-    const videoIdRegex =
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(videoIdRegex);
-    return match ? match[1] : null;
+    const youtubeRegex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:\S+\?v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const googleDriveRegex =
+      /(?:https:\/\/)?(?:drive\.google\.com\/file\/d\/|drive\.google\.com\/open\?id=)([a-zA-Z0-9_-]+)/;
+
+    const youtubeMatch = url.match(youtubeRegex);
+    const googleDriveMatch = url.match(googleDriveRegex);
+
+    if (youtubeMatch) {
+      return { id: youtubeMatch[1], type: "youtube" };
+    }
+    if (googleDriveMatch) {
+      return { id: googleDriveMatch[1], type: "google-drive" };
+    }
+    return null;
   };
 
-  // Handler for video URL input change
   const handleVideoUrlChange = (e) => {
     const newUrl = e.target.value;
     setVideoUrl(newUrl);
 
     if (newUrl) {
-      setIsLoading(true); // Show loader while video is being processed
+      setIsLoading(true);
 
-      // Extract the video ID and construct embed URL
-      const videoId = extractVideoId(newUrl);
-      if (videoId) {
-        setEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
+      const videoData = extractVideoId(newUrl);
+      if (videoData) {
+        const embedUrl =
+          videoData.type === "youtube"
+            ? `https://www.youtube.com/embed/${videoData.id}`
+            : `https://drive.google.com/file/d/${videoData.id}/preview`;
+        setEmbedUrl(embedUrl);
+        setVideoType(videoData.type);
         setIsLoading(false);
       } else {
-        setEmbedUrl(""); // Clear embed URL if not valid
+        setEmbedUrl("");
         setIsLoading(false);
+        setVideoType("");
       }
     } else {
       setIsLoading(false);
       setEmbedUrl("");
+      setVideoType("");
     }
   };
 
-  // Handler for form submission
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnail(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!videoTitle || !videoUrl) {
-      setError("Both video title and URL are required");
-      return;
-    }
-
     setUploading(true);
     setError("");
 
+    const loadingToast = toast.loading("Uploading video...");
+
     try {
-      // Post request to upload the video data
-      const { data } = await axios.post("/upload_video", {
-        title: videoTitle,
-        url: videoUrl,
+      if (!videoTitle || !videoUrl) {
+        toast.error("Please provide a valid video title and URL.", {
+          id: loadingToast,
+        });
+        setUploading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("title", videoTitle);
+      formData.append("url", videoUrl);
+      if (thumbnail) {
+        formData.append("thumbnail", thumbnail);
+      }
+
+      const { data } = await axios.post("/upload_video", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      navigate("/video_list")
-      toast.success("Successfully uploaded")
+
+      if (data?.error) {
+        toast.error(data.error, { id: loadingToast });
+      } else {
+        navigate("/video_list");
+        toast.success("Video uploaded successfully!", { id: loadingToast });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while uploading the video.", {
+        id: loadingToast,
+      });
+    } finally {
       setUploading(false);
-      setVideoTitle("");
-      setVideoUrl("");
-      setEmbedUrl("");
-    } catch (error) {
-      console.error("Error uploading video: ", error);
-      setError("Failed to upload video. Please try again.");
-      setUploading(false);
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -97,53 +138,117 @@ export default function UploadVideoForm() {
           sx={{ mb: 3 }}
         />
         <TextField
-          label="YouTube Video Link"
+          label="YouTube or Google Drive Video Link"
           variant="outlined"
           fullWidth
           value={videoUrl}
           onChange={handleVideoUrlChange}
-          placeholder="Paste a YouTube video link here"
+          placeholder="Paste a YouTube or Google Drive video link here"
         />
 
-        {/* Video Preview Section */}
-        <Stack
-          sx={{
-            mt: "40px",
-            width: "100%",
-            height: "320px",
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23333' stroke-width='1' stroke-dasharray='12' stroke-dashoffset='15' stroke-linecap='round'/%3e%3c/svg%3e\")",
-            borderRadius: "16px",
-          }}
-          justifyContent={"center"}
-          alignItems={"center"}
-          gap="16px"
-        >
-          {isLoading ? (
-            <CircularProgress size={48} />
-          ) : embedUrl ? (
-            <Stack sx={{ borderRadius: "16px", overflow: "hidden", width: "100%", height: "100%" }}>
-              <iframe
-                width="100%"
-                height="100%"
-                src={embedUrl}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="YouTube Video Preview"
-              />
-            </Stack>
-          ) : (
-            <Stack sx={{ height: "48px", width: "48px" }}>
-              <Video size={"48px"} color="#637381" />
-            </Stack>
-          )}
-
-          {!embedUrl && !isLoading && (
-            <Typography variant="body1" color={"text.secondary"}>
-              Paste a YouTube video link to preview it here.
+        {videoType === "google-drive" && (
+          <Stack gap="16px">
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              Thumbnail
             </Typography>
-          )}
+            <Box
+              sx={{
+                width: "320px",
+                height: "180px",
+                background: "#F6F7F8",
+                borderRadius: "8px",
+                border: "3px solid #fff",
+                boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.12)",
+                position: "relative",
+                overflow: "hidden",
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onClick={() =>
+                document.getElementById("thumbnail-upload-input").click()
+              }
+            >
+              {thumbnail ? (
+                <img
+                  src={URL.createObjectURL(thumbnail)}
+                  alt="Video Thumbnail"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <Stack sx={{ textAlign: "center" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "#919EAB",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Click here to upload a thumbnail
+                  </Typography>
+                </Stack>
+              )}
+              <input
+                type="file"
+                hidden
+                id="thumbnail-upload-input"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+              />
+            </Box>
+          </Stack>
+        )}
+
+        <Stack gap="16px">
+          <Typography variant="body1" sx={{ fontWeight: 600 }}>
+            Video Preview
+          </Typography>
+          <Stack
+            sx={{
+              width: "100%",
+              height: "320px",
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23333' stroke-width='1' stroke-dasharray='12' stroke-dashoffset='15' stroke-linecap='round'/%3e%3c/svg%3e\")",
+              borderRadius: "16px",
+            }}
+            justifyContent={"center"}
+            alignItems={"center"}
+            gap="16px"
+          >
+            {isLoading ? (
+              <CircularProgress size={48} />
+            ) : embedUrl ? (
+              <Stack
+                sx={{
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={embedUrl}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Video Preview"
+                />
+              </Stack>
+            ) : (
+              <Stack sx={{ height: "48px", width: "48px" }}>
+                <Video size={"48px"} color="#637381" />
+              </Stack>
+            )}
+
+            {!embedUrl && !isLoading && (
+              <Typography variant="body1" color={"text.secondary"}>
+                Paste a YouTube or Google Drive video link to preview it here.
+              </Typography>
+            )}
+          </Stack>
         </Stack>
 
         {error && (

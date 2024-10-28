@@ -32,7 +32,30 @@ import Appointments from "../Page/Appointments/Appointments";
 export default function MainRouters() {
   return (
     <>
-      <Toaster />
+       <Toaster
+    toastOptions={{
+      success: {
+        style: {
+          background: "#59B259",
+          color: "#fff",
+        },
+        iconTheme: {
+          primary: "#fff",
+          secondary: "#59B259",
+        },
+      },
+      error: {
+        style: {
+          background: "#EC4034",
+          color: "#fff",
+        },
+        iconTheme: {
+          primary: "#fff",
+          secondary: "#EC4034",
+        },
+      },
+    }}
+  />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="" element={<PrivateRoute />}>
