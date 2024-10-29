@@ -11,10 +11,10 @@ export default function AllAppointments() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   useEffect(() => {
-    loadJournals();
+    loadAppointment();
   }, []);
 
-  const loadJournals = async () => {
+  const loadAppointment = async () => {
     try {
       const { data } = await axios.get("/appointments");
       setAppointments(data);

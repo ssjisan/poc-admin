@@ -1,38 +1,31 @@
-import Lottie, { useLottie } from "lottie-react";
+import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import loaderAnimation from "../assets/loader.json"; // Import your animation JSON
 
 export default function Loading() {
   const [counter, setCounter] = useState(3);
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCounter((currentCounter) => --currentCounter);
+      setCounter((currentCounter) => currentCounter - 1);
     }, 1000);
 
-    counter === 0 &&
+    if (counter === 0) {
       navigate("/login", {
-        state: location.pathname,
+        state: { from: location.pathname },
       });
-    return () => clearInterval(interval);
-  }, [counter]);
-
-  const options = {
-    animationData: "../assets/loader.json",
-    loop: true,
-    autoplay: true,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
     }
-  };
 
+    return () => clearInterval(interval);
+  }, [counter, navigate, location]);
 
   return (
     <div
       style={{
         height: "100vh",
-        border: "1px solid red",
         margin: "0",
         display: "flex",
         justifyContent: "center",
@@ -41,9 +34,9 @@ export default function Loading() {
       }}
     >
       <Lottie
-        options={options}
-        height={300}
-        width={300}
+        animationData={loaderAnimation} // Use imported animation JSON directly
+        loop
+        style={{ width: 300, height: 300 }} // Adjust dimensions as needed
       />
     </div>
   );

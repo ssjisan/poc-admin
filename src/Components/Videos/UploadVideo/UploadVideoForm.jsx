@@ -211,7 +211,7 @@ export default function UploadVideoForm() {
               backgroundImage:
                 "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23333' stroke-width='1' stroke-dasharray='12' stroke-dashoffset='15' stroke-linecap='round'/%3e%3c/svg%3e\")",
               borderRadius: "16px",
-              p:"16px"
+              p: videoUrl ? "0px" : "16px",
             }}
             justifyContent={"center"}
             alignItems={"center"}
@@ -245,7 +245,11 @@ export default function UploadVideoForm() {
             )}
 
             {!embedUrl && !isLoading && (
-              <Typography variant="body1" color={"text.secondary"} sx={{textAlign:"center"}}>
+              <Typography
+                variant="body1"
+                color={"text.secondary"}
+                sx={{ textAlign: "center" }}
+              >
                 Paste a YouTube or Google Drive video link to preview it here.
               </Typography>
             )}

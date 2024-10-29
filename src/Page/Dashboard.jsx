@@ -3,10 +3,11 @@ import Sidebar from "../Layout/Sidebar";
 import MatrixCardDeck from "../Components/Dashboard/MatrixCardDeck";
 import SupportCard from "../Components/Dashboard/SupportCard/SupportCard";
 import DirectNavigation from "../Components/Dashboard/DirectNavigation/DirectNavigation";
+
 export default function Dashboard() {
   const drawerWidth = 280;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
-
+  
   return (
     <Box>
       <Sidebar />
@@ -30,6 +31,7 @@ export default function Dashboard() {
           </Grid>
           <MatrixCardDeck />
         </Box>
+        
       </Box>
     </Box>
   );
