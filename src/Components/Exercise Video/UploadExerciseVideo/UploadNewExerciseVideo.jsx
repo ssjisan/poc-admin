@@ -1,14 +1,14 @@
 import { Box, Grid, useMediaQuery } from "@mui/material";
-import UpdateVideoForm from "./UpdateVideoForm";
+import UploadExerciseVideoForm from "./UploadExerciseVideoForm";
 
-export default function UpdateMarkedVideo() {
+export default function UploadNewExerciseVideo() {
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
 
   return (
-    <Box sx={{ pl: forBelow1200 ? "24px" : "0px" }}>
-      <Grid container spacing={3}>
+    <Box sx={{ pl: forBelow1200 ? "24px" :"0px" }}>
+      <Grid container>
         <Grid item xs={12} sm={12} md={8} lg={5}>
-          <UpdateVideoForm />
+          <UploadExerciseVideoForm />
         </Grid>
       </Grid>
     </Box>

@@ -47,8 +47,7 @@ export default function Navbar({ handleDrawerToggle }) {
         >
           <BurgerMenu color="#031E21" size={24} />
         </IconButton>
-        <Stack direction="row" gap="16px" justifyContent="center">
-          {/* <MessagesNotification /> */}
+        <Stack direction="row" justifyContent="center">
           <AccountPopOver/>
         </Stack>
       </Toolbar>

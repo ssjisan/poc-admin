@@ -12,7 +12,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export default function UploadVideoForm() {
+export default function UploadExerciseVideoForm() {
   // State to store video data
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
@@ -100,7 +100,7 @@ export default function UploadVideoForm() {
         formData.append("thumbnail", thumbnail);
       }
 
-      const { data } = await axios.post("/upload_video", formData, {
+      const { data } = await axios.post("/upload-exercise-video", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -109,7 +109,7 @@ export default function UploadVideoForm() {
       if (data?.error) {
         toast.error(data.error, { id: loadingToast });
       } else {
-        navigate("/video_list");
+        navigate("/exercise_video_list");
         toast.success("Video uploaded successfully!", { id: loadingToast });
       }
     } catch (err) {
@@ -126,7 +126,7 @@ export default function UploadVideoForm() {
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h4" sx={{ mb: "40px" }}>
-        Upload a new video
+        Upload a new exercise video
       </Typography>
       <Stack direction="column" spacing={3}>
         <TextField
@@ -158,7 +158,7 @@ export default function UploadVideoForm() {
                 background: "#F6F7F8",
                 borderRadius: "8px",
                 border: "3px solid #fff",
-                boxShadow: "0px 0px 8px red",
+                boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.12)",
                 position: "relative",
                 overflow: "hidden",
                 cursor: "pointer",

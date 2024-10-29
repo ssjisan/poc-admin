@@ -28,65 +28,96 @@ import AddForm from "../Page/Forms/AddForm";
 import FormList from "../Page/Forms/FormList";
 import UpdateForm from "../Page/Forms/UpdateForm";
 import Appointments from "../Page/Appointments/Appointments";
+import UploadExerciseVideo from "../Page/ExerciseVideos/UploadExerciseVideo";
+import ExerciseVideoList from "../Page/ExerciseVideos/ExerciseVideoList";
+import UpdateExerciseVideo from "../Page/ExerciseVideos/UpdateExerciseVideo";
 
 export default function MainRouters() {
   return (
     <>
-       <Toaster
-    toastOptions={{
-      success: {
-        style: {
-          background: "#59B259",
-          color: "#fff",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#59B259",
-        },
-      },
-      error: {
-        style: {
-          background: "#EC4034",
-          color: "#fff",
-        },
-        iconTheme: {
-          primary: "#fff",
-          secondary: "#EC4034",
-        },
-      },
-    }}
-  />
+      <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              background: "#59B259",
+              color: "#fff",
+            },
+            iconTheme: {
+              primary: "#fff",
+              secondary: "#59B259",
+            },
+          },
+          error: {
+            style: {
+              background: "#EC4034",
+              color: "#fff",
+            },
+            iconTheme: {
+              primary: "#fff",
+              secondary: "#EC4034",
+            },
+          },
+        }}
+      />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="" element={<PrivateRoute />}>
           <Route path="/" element={<Dashboard />} />
+
+          {/* Album Routes Start */}
           <Route path="/upload_album" element={<UploadAlbum />} />
           <Route path="/album_list" element={<AlbumList />} />
           <Route path="/album/:id" element={<UpdateAlbum />} />
+          {/* Album Routes End */}
+
+          {/* Videos Routes Start */}
+          <Route path="/upload_exercise_video" element={<UploadExerciseVideo />} />
+          <Route path="/exercise_video_list" element={<ExerciseVideoList />} />
+          <Route path="/exercise_video/:slug" element={<UpdateExerciseVideo />} />
+          {/* Videos Routes End */}
+
+          {/* Exercise Videos Routes Start */}
           <Route path="/upload_video" element={<UploadVideo />} />
           <Route path="/video_list" element={<VideoList />} />
           <Route path="/video/:slug" element={<UpdateVideo />} />
+          {/* Exercise Videos Routes End */}
+
+          {/* Doctor Routes Start */}
           <Route path="/add_doctor" element={<AddDoctorProfile />} />
           <Route path="/doctor_list" element={<DoctorsProfile />} />
           <Route path="/doctor/:id" element={<UpdateDoctorProfile />} />
+          {/* Doctor Routes End */}
+
+          {/* Treatment Routes Start */}
           <Route path="/create_treatment" element={<CreateTreatment />} />
           <Route path="/treatments_list" element={<AllTreatments />} />
+          {/* Treatment Routes End */}
+
+          {/* Blog Routes Start */}
           <Route path="/write_blog" element={<WriteABlog />} />
-          <Route path="/edit-blog/:slug" element={<EditBlog/>} />
+          <Route path="/edit-blog/:slug" element={<EditBlog />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<PreviewBlog />} />
+          {/* Blog Routes End */}
 
+          {/* Journal Routes Start */}
           <Route path="/add_journal" element={<AddJournal />} />
           <Route path="/journals" element={<JournalList />} />
           <Route path="/journal/:journalId" element={<UpdateJournal />} />
+          {/* Journal Routes End */}
 
+          {/* Forms Routes Start */}
           <Route path="upload_form" element={<AddForm />} />
           <Route path="forms" element={<FormList />} />
           <Route path="form/:formId" element={<UpdateForm />} />
+          {/* Forms Routes End */}
 
+          {/* User Routes Start */}
           <Route path="/create_use" element={<AddUser />} />
           <Route path="change_password" element={<ChangePassword />} />
           <Route path="user_list" element={<UserList />} />
+          {/* User Routes End */}
+
           <Route path="/appointments" element={<Appointments />} />
         </Route>
         {/* <Route path="*" element={<ErrorPage />} replace /> */}

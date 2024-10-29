@@ -4,6 +4,7 @@ import {
   Calender,
   Dashboard,
   Doctor,
+  ExerciseVideo,
   Form,
   JournalList,
   Services,
@@ -105,6 +106,30 @@ const navConfig = ({ pathname }) => [
       {
         title: "Video List",
         link: "/video_list",
+      },
+    ],
+  },
+  {
+    title: "Exercise Video",
+    icon: (
+      <ExerciseVideo
+        color={
+          pathname.startsWith("/upload_exercise_video") ||
+          pathname.startsWith("/exercise_video_list")
+            ? "#00AE60"
+            : "#637381"
+        }
+        size={20}
+      />
+    ),
+    items: [
+      {
+        title: "Add Exercise Video",
+        link: "/upload_exercise_video",
+      },
+      {
+        title: "Exercise Video List",
+        link: "/exercise_video_list",
       },
     ],
   },
