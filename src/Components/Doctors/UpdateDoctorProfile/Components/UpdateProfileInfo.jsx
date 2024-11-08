@@ -20,10 +20,14 @@ export default function UpdateProfileInfo() {
   const [phone, setPhone] = useState("");
   const [whatsApp, setWhatsApp] = useState("");
   const [detailsInfo, setDetailsInfo] = useState("");
-  const [location, setLocation] = useState("");
-  const [appointmentNumber, setAppointmentNumber] = useState("");
-  const [consultationDays, setConsultationDays] = useState([]);
-  const [consultationTime, setConsultationTime] = useState("");
+  const [serialInfo, setSerialInfo] = useState([
+    {
+      location: "",
+      appointmentNumber: "",
+      consultationDays: [],
+      consultationTime: "",
+    },
+  ]);
   const [creating, setCreating] = useState(false);
 
   const navigate = useNavigate();
@@ -43,10 +47,14 @@ export default function UpdateProfileInfo() {
       setPhone(data.phone);
       setWhatsApp(data.whatsApp);
       setDetailsInfo(data.detailsInfo);
-      setLocation(data.location);
-      setAppointmentNumber(data.appointmentNumber);
-      setConsultationTime(data.consultationTime);
-      setConsultationDays(data.consultationDays);
+      setSerialInfo(data.serialInfo || [ // Set serialInfo if available from DB
+        {
+          location: "",
+          appointmentNumber: "",
+          consultationDays: [],
+          consultationTime: "",
+        },
+      ]);
       if (data.profilePhoto && data.profilePhoto.length > 0) {
         setProfilePhoto(data.profilePhoto[0].url); // Load image URL from DB
       }
@@ -76,12 +84,14 @@ export default function UpdateProfileInfo() {
     formData.append("phone", phone);
     formData.append("whatsApp", whatsApp);
     formData.append("detailsInfo", detailsInfo);
-    formData.append("location", location);
-    formData.append("appointmentNumber", appointmentNumber);
-    consultationDays.forEach((day) =>
-      formData.append("consultationDays[]", day)
-    );
-    formData.append("consultationTime", consultationTime);
+    serialInfo.forEach((item, index) => {
+      formData.append(`serialInfo[${index}].location`, item.location);
+      formData.append(`serialInfo[${index}].appointmentNumber`, item.appointmentNumber);
+      item.consultationDays.forEach((day, i) =>
+        formData.append(`serialInfo[${index}].consultationDays[${i}]`, day)
+      );
+      formData.append(`serialInfo[${index}].consultationTime`, item.consultationTime);
+    });
 
     // Check if a new image is uploaded
     if (image) {
@@ -137,14 +147,8 @@ export default function UpdateProfileInfo() {
         />
         <UpdateSerialInfo
           forBelow676={forBelow676}
-          location={location}
-          setLocation={setLocation}
-          appointmentNumber={appointmentNumber}
-          setAppointmentNumber={setAppointmentNumber}
-          consultationDays={consultationDays}
-          setConsultationDays={setConsultationDays}
-          consultationTime={consultationTime}
-          setConsultationTime={setConsultationTime}
+          serialInfo={serialInfo} // Pass serialInfoList state as a prop
+          setSerialInfo={setSerialInfo} // Pass the setter function
         />
       </Stack>
       <Stack

@@ -11,7 +11,7 @@ export default function DirectNavigation() {
       }}
     >
       <img
-        src="/graphics.png"
+        src="https://res.cloudinary.com/dmyttqosa/image/upload/v1730748281/user_panel/zqobxzgsa8rtdxjgqnaq.png"
         alt="event"
         width="100%"
         height="100%"

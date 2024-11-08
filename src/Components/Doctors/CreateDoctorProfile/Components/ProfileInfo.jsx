@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import ProfileImage from "./ProfileImage";
 import BasicInfo from "./BasicInfo";
-import SerialInfo from "./SerialInfo";
+import SerialInfo from "./SerialInfo"; // Import the SerialInfo component
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom";
 export default function ProfileInfo() {
   const forBelow1200 = useMediaQuery("(max-width:1200px)");
   const forBelow676 = useMediaQuery("(max-width:676px)");
-  // Start Here //
+
+  // State for profile info
   const [profilePhoto, setProfilePhoto] = useState("");
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
@@ -18,14 +19,19 @@ export default function ProfileInfo() {
   const [phone, setPhone] = useState("");
   const [whatsApp, setWhatsApp] = useState("");
   const [detailsInfo, setDetailsInfo] = useState("");
-  const [location, setLocation] = useState("");
-  const [appointmentNumber, setAppointmentNumber] = useState("");
-  const [consultationDays, setConsultationDays] = useState([]);
-  const [consultationTime, setConsultationTime] = useState("");
   const [creating, setCreating] = useState(false);
+  const [serialInfo, setSerialInfo] = useState([
+    {
+      location: "",
+      appointmentNumber: "",
+      consultationDays: [],
+      consultationTime: "",
+    },
+  ]);
   const navigate = useNavigate();
 
-  // Upload Profile Image //
+
+  // Upload Profile Image
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const MAX_SIZE_MB = 5;
@@ -41,42 +47,54 @@ export default function ProfileInfo() {
     }
   };
 
+  // Handle form submission to create a profile
   const handleCreateMember = async () => {
-    setCreating(true);
+    // Create a loading toast
+    const loadingToast = toast.loading("Creating profile...");
+
     try {
+      // Create a FormData object to handle form submission
       const formData = new FormData();
+      formData.append("profilePhoto", profilePhoto); // Append the profile photo if available
       formData.append("name", name);
       formData.append("designation", designation);
       formData.append("email", email);
       formData.append("phone", phone);
       formData.append("whatsApp", whatsApp);
       formData.append("detailsInfo", detailsInfo);
-      formData.append("location", location);
-      formData.append("appointmentNumber", appointmentNumber);
-      consultationDays.forEach((day) => formData.append("consultationDays[]", day));
-      formData.append("consultationTime", consultationTime);
-      if (profilePhoto) {
-        formData.append("profilePhoto", profilePhoto); // Append the file directly
-      }
+      formData.append("serialInfo", JSON.stringify(serialInfo)); // Convert serialInfo to a string
+
+      // Show a loading state during the submission process
+      setCreating(true);
 
       const { data } = await axios.post("/create-profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(data);
+
+      // Dismiss the loading toast once response is received
+      toast.dismiss(loadingToast);
+
       if (data?.error) {
+        toast.error(data.error); // Show error if response includes an error field
         setCreating(false);
-        toast.error(data.error);
       } else {
+        toast.success("Doctor Profile Created Successfully");
         setCreating(false);
-        navigate("/doctor_list");
-        toast.success("Doctor Profile Create Succesfully");
+        navigate("/doctor_list"); // Redirect after successful creation
       }
     } catch (error) {
-      toast.error(error.message);
+      // Dismiss the loading toast and show an error toast
+      toast.dismiss(loadingToast);
+      console.error("Error creating profile:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      // Reset the loading state after the submission is complete
+      setCreating(false);
     }
   };
+
   return (
     <Stack gap={2} sx={{ pb: "64px" }}>
       <Typography variant="h4" sx={{ mb: "40px" }}>
@@ -108,14 +126,8 @@ export default function ProfileInfo() {
         {/* Serial Info */}
         <SerialInfo
           forBelow676={forBelow676}
-          location={location}
-          setLocation={setLocation}
-          appointmentNumber={appointmentNumber}
-          setAppointmentNumber={setAppointmentNumber}
-          consultationDays={consultationDays}
-          setConsultationDays={setConsultationDays}
-          consultationTime={consultationTime}
-          setConsultationTime={setConsultationTime}
+          serialInfo={serialInfo} // Pass serialInfoList state as a prop
+          setSerialInfo={setSerialInfo} // Pass the setter function
         />
       </Stack>
       <Stack

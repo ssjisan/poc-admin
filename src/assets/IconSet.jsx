@@ -1832,26 +1832,35 @@ export const Avatar = ({ color, size }) => {
   );
 };
 
-Dashboard.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+export const PlusIcon = ({ color, size }) => {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 12.0001L12 12.0001M12 12.0001L4 12.0001M12 12.0001L12 4M12 12.0001L12 20"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
 };
-Video.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-UserList.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-EventList.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-BurgerMenu.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
+
 AddUser.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -1865,10 +1874,6 @@ AddAlbum.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 AlbumList.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-NoticeList.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -1892,6 +1897,38 @@ ArrowDown.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
+AlbumAdd.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+AddMember.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+ArrowRight.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+AddJournal.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Avatar.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+BurgerMenu.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Bullet.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Blog.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
 Calender.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -1900,7 +1937,35 @@ Clock.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
-Upload.propTypes = {
+CheckRead.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Cross.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Camera.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Dashboard.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+DownArrow.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Drag.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Doctor.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+EventList.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -1909,6 +1974,18 @@ EyeOff.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 EyeOn.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+UserList.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+NoticeList.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+Upload.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -1921,14 +1998,6 @@ Update.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 More.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-AlbumAdd.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-AddMember.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -1946,15 +2015,7 @@ Minus.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
-DownArrow.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
 Mail.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-CheckRead.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -1962,19 +2023,7 @@ TimeAgo.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
-ArrowRight.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-AddJournal.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
 JournalList.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Bullet.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
@@ -2007,35 +2056,20 @@ EyeBold.propTypes = {
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-Blog.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Drag.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Cross.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Doctor.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Camera.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
-Avatar.propTypes = {
-  color: PropTypes.string.isRequired,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-};
 Services.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 ExerciseVideo.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+
+Video.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+PlusIcon.propTypes = {
   color: PropTypes.string.isRequired,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };

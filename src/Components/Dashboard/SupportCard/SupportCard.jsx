@@ -32,16 +32,16 @@ export default function SupportCard() {
             Welcome back <br /> {auth?.user?.name}!
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Visit our website to explore our services and discover the latest
-            offers available.
+            Get tailored solutions that meet your needs – request your desired
+            service today!
           </Typography>
         </Stack>
-        <a href="https://insighttechbd.com/" target="_blank">
-          <Button variant="contained">Visit Whatsapp</Button>
+        <a href="https://insighttechbd.com/contact_us" target="_blank">
+          <Button variant="contained">Start a project</Button>
         </a>
       </Box>
-      <Box sx={{ p: "24px", width: forBelow676 ? "100%" : "auto" }}>
-        <img src="/support.png" alt="support" width="100%" />
+      <Box sx={{ p: "24px", width: forBelow676 ? "100%" : "280px" }}>
+        <img src="https://res.cloudinary.com/dmyttqosa/image/upload/v1730748105/user_panel/nlcscfsjtvxbbcpl8pkj.png" alt="support" width="100%" />
       </Box>
     </Box>
   );
