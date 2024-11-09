@@ -83,7 +83,7 @@ export default function Body({
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: { width: 200, p: "8px", borderRadius: "16px" },
+          sx: { width: 200, p: "8px", borderRadius: "12px", boxShadow:"0px 0px 2px rgba(145, 158, 171, 0.2), 0px 12px 24px -4px rgba(145, 158, 171, 0.12);" },
         }}
       >
         <MenuItem

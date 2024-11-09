@@ -9,13 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { EyeOff, EyeOn } from "../../assets/IconSet";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { DataContext } from "../../DataProcessing/DataProcessing";
 
 export default function ChangePasswordForm() {
-  
+  const { auth, setAuth } = useContext(DataContext);
+
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,20 +27,23 @@ export default function ChangePasswordForm() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate= useNavigate()
-  
+  const navigate = useNavigate();
+
   const handleChangePassword = async () => {
     setLoading(true);
-    try {  
-      const { data } = await axios.post(
-        "/change-password",
-        { oldPassword, newPassword, confirmPassword },
-      );
+    try {
+      const { data } = await axios.post("/change-password", {
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      });
       if (data?.error) {
         toast.error(data.error);
       } else {
         toast.success(data.message || "Password changed successfully!");
-        navigate("/")
+        setAuth({ ...auth, user: null, token: "" });
+        localStorage.removeItem("auth");
+        navigate("/login");
       }
     } catch (error) {
       if (error.response?.status === 401) {
