@@ -36,7 +36,7 @@ export default function Loading() {
       <Lottie
         animationData={loaderAnimation} // Use imported animation JSON directly
         loop
-        style={{ width: 300, height: 300 }} // Adjust dimensions as needed
+        style={{ width: 120, height: 120 }} // Adjust dimensions as needed
       />
     </div>
   );

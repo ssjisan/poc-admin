@@ -18,6 +18,8 @@ export default function AllAppointments() {
     try {
       const { data } = await axios.get("/appointments");
       setAppointments(data);
+      console.log(data);
+      
     } catch (err) {
       toast.error("Here Links can't load");
     }

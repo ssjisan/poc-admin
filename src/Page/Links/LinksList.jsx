@@ -1,7 +1,7 @@
 import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
-import AllJournalsList from "../../Components/Journals/JournalList/AllJournalsList";
-export default function JournalList() {
+import AllLinksList from "../../Components/Links/LinkList/AllLinksList";
+export default function LinksList() {
   const drawerWidth = 280;
 
   return (
@@ -16,7 +16,7 @@ export default function JournalList() {
         }}
       >
         <Toolbar />
-        <AllJournalsList />
+        <AllLinksList />
       </Box>
     </Box>
   );

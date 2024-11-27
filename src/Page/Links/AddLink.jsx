@@ -1,7 +1,7 @@
 import { Box, Toolbar } from "@mui/material";
-import AddAJournal from "../../Components/Journals/AddJournal/AddAJournal";
 import Sidebar from "../../Layout/Sidebar";
-export default function AddJournal() {
+import AddNewLink from "../../Components/Links/AddLink/AddNewLink";
+export default function AddLink() {
   const drawerWidth = 280;
 
   return (
@@ -16,7 +16,7 @@ export default function AddJournal() {
         }}
       >
         <Toolbar />
-        <AddAJournal />
+        <AddNewLink />
       </Box>
     </Box>
   );

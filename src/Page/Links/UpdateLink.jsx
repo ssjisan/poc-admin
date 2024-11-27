@@ -1,7 +1,7 @@
 import { Box, Toolbar } from "@mui/material";
 import Sidebar from "../../Layout/Sidebar";
-import UpdateAJournal from "../../Components/Journals/UpdateJournal/UpdateAJournal";
-export default function UpdateJournal() {
+import UpdateSelectedLink from "../../Components/Links/UpdateLink/UpdateSelectedLink";
+export default function UpdateLink() {
   const drawerWidth = 280;
 
   return (
@@ -16,7 +16,7 @@ export default function UpdateJournal() {
         }}
       >
         <Toolbar />
-        <UpdateAJournal />
+        <UpdateSelectedLink />
       </Box>
     </Box>
   );

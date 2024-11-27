@@ -38,12 +38,12 @@ const navConfig = ({ pathname }) => [
     ],
   },
   {
-    title: "Treatments",
+    title: "Parents guidance",
     icon: (
       <Services
         color={
-          pathname.startsWith("/create_treatment") ||
-          pathname.startsWith("/treatments_list")
+          pathname.startsWith("/create_guidance") ||
+          pathname.startsWith("/guidance_list")
             ? "#00AE60"
             : "#637381"
         }
@@ -52,12 +52,12 @@ const navConfig = ({ pathname }) => [
     ),
     items: [
       {
-        title: "Create Treatment",
-        link: "/create_treatment",
+        title: "Create guidance",
+        link: "/create_guidance",
       },
       {
-        title: "Treatments List",
-        link: "/treatments_list",
+        title: "Guidance List",
+        link: "/guidance_list",
       },
     ],
   },
@@ -181,12 +181,12 @@ const navConfig = ({ pathname }) => [
     ],
   },
   {
-    title: "Journals",
+    title: "Links",
     icon: (
       <JournalList
         color={
-          pathname.startsWith("/add_journal") ||
-          pathname.startsWith("/journals")
+          pathname.startsWith("/add_link") ||
+          pathname.startsWith("/links")
             ? "#00AE60"
             : "#637381"
         }
@@ -195,12 +195,12 @@ const navConfig = ({ pathname }) => [
     ),
     items: [
       {
-        title: "Add Journal",
-        link: "/add_journal",
+        title: "Add Link",
+        link: "/add_link",
       },
       {
-        title: "All Journals",
-        link: "/journals",
+        title: "All Links",
+        link: "/links",
       },
     ],
   },

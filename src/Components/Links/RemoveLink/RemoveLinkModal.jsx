@@ -3,7 +3,7 @@ import Modal from "@mui/material/Modal";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Warning } from "../../../assets/IconSet";
 
-export default function RemoveJournalModal({
+export default function RemoveLinkModal({
   isOpen,
   handleClose,
   journalTitle,
@@ -65,7 +65,7 @@ export default function RemoveJournalModal({
   );
 }
 
-RemoveJournalModal.propTypes = {
+RemoveLinkModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleRemove: PropTypes.func.isRequired,

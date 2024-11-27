@@ -1,10 +1,12 @@
 import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
 export default function TreatmentCard({
   data,
   setMaxHeight,
   maxHeight,
+  openDeleteModal,
   toggleDrawer,
 }) {
   const cardRef = useRef();
@@ -44,7 +46,7 @@ export default function TreatmentCard({
         direction={forBelow580 ? "column" : "row"}
         sx={{ width: "100%" }}
       >
-        <Button color="error" variant="outlined" sx={{ width: "100%" }}>
+        <Button variant="soft" sx={{ width: "100%" }} color="inherit" onClick={() => openDeleteModal(data)}>
           Delete
         </Button>
         <Button
@@ -58,3 +60,14 @@ export default function TreatmentCard({
     </Stack>
   );
 }
+
+TreatmentCard.propTypes = {
+  data: PropTypes.shape({
+    title: PropTypes.string.isRequired, // Ensure the title is a required string
+    subTitle: PropTypes.string, // Optional subtitle
+  }).isRequired,
+  setMaxHeight: PropTypes.func.isRequired, // Ensure it's a function
+  maxHeight: PropTypes.number, // Max height is optional but should be a number
+  toggleDrawer: PropTypes.func.isRequired, // Ensure it's a function
+  openDeleteModal: PropTypes.func.isRequired, // Ensure it's a function
+};

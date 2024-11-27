@@ -16,7 +16,7 @@ export default function CreateTreatmentForm() {
       return;
     }
     try {
-      const response = await axios.post("/create_treatment", {
+      const response = await axios.post("/create_guidance", {
         title,
         subTitle,
       });
@@ -24,7 +24,7 @@ export default function CreateTreatmentForm() {
       if (response.data.error) {
         toast.error(response.data.error);
       } else {
-        navigate("/");
+        navigate("/guidance_list");
         toast.success("Treatment created successfully");
       }
     } catch (error) {

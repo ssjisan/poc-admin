@@ -43,7 +43,7 @@ export default function WriteBlogPost() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("/treatments_list"); // Fetch categories
+        const response = await axios.get("/guidance_list"); // Fetch categories
         setCategories(response.data); // Assuming the response returns an array of categories
       } catch (error) {
         console.error("Error fetching categories:", error);

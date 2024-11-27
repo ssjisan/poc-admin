@@ -21,9 +21,6 @@ import ChangePassword from "../Page/User/ChangePassword";
 import UserList from "../Page/User/UserList";
 import AllTreatments from "../Page/Treatments/AllTreatments";
 import PreviewBlog from "../Components/BlogPost/PreviewBlog/PreviewBlog";
-import AddJournal from "../Page/Journal/AddJournal";
-import JournalList from "../Page/Journal/JournalList";
-import UpdateJournal from "../Page/Journal/UpdateJournal";
 import AddForm from "../Page/Forms/AddForm";
 import FormList from "../Page/Forms/FormList";
 import UpdateForm from "../Page/Forms/UpdateForm";
@@ -31,6 +28,9 @@ import Appointments from "../Page/Appointments/Appointments";
 import UploadExerciseVideo from "../Page/ExerciseVideos/UploadExerciseVideo";
 import ExerciseVideoList from "../Page/ExerciseVideos/ExerciseVideoList";
 import UpdateExerciseVideo from "../Page/ExerciseVideos/UpdateExerciseVideo";
+import AddLink from "../Page/Links/AddLink";
+import LinksList from "../Page/Links/LinksList";
+import UpdateLink from "../Page/Links/UpdateLink";
 
 export default function MainRouters() {
   return (
@@ -71,9 +71,15 @@ export default function MainRouters() {
           {/* Album Routes End */}
 
           {/* Videos Routes Start */}
-          <Route path="/upload_exercise_video" element={<UploadExerciseVideo />} />
+          <Route
+            path="/upload_exercise_video"
+            element={<UploadExerciseVideo />}
+          />
           <Route path="/exercise_video_list" element={<ExerciseVideoList />} />
-          <Route path="/exercise_video/:slug" element={<UpdateExerciseVideo />} />
+          <Route
+            path="/exercise_video/:slug"
+            element={<UpdateExerciseVideo />}
+          />
           {/* Videos Routes End */}
 
           {/* Exercise Videos Routes Start */}
@@ -89,8 +95,8 @@ export default function MainRouters() {
           {/* Doctor Routes End */}
 
           {/* Treatment Routes Start */}
-          <Route path="/create_treatment" element={<CreateTreatment />} />
-          <Route path="/treatments_list" element={<AllTreatments />} />
+          <Route path="/create_guidance" element={<CreateTreatment />} />
+          <Route path="/guidance_list" element={<AllTreatments />} />
           {/* Treatment Routes End */}
 
           {/* Blog Routes Start */}
@@ -100,11 +106,11 @@ export default function MainRouters() {
           <Route path="/blog/:slug" element={<PreviewBlog />} />
           {/* Blog Routes End */}
 
-          {/* Journal Routes Start */}
-          <Route path="/add_journal" element={<AddJournal />} />
-          <Route path="/journals" element={<JournalList />} />
-          <Route path="/journal/:journalId" element={<UpdateJournal />} />
-          {/* Journal Routes End */}
+          {/* Links Routes Start */}
+          <Route path="add_link" element={<AddLink />} />
+          <Route path="links" element={<LinksList />} />
+          <Route path="link/:linkId" element={<UpdateLink />} />
+          {/* Links Routes End */}
 
           {/* Forms Routes Start */}
           <Route path="upload_form" element={<AddForm />} />

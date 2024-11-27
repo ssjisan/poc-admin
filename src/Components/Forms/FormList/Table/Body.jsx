@@ -9,95 +9,81 @@ import {
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import PropTypes from "prop-types";
-import { Update, Remove, More, Edit } from "../../../../assets/IconSet";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import axios from "axios";
-import RemoveFormModal from "../../RemoveForm/RemoveFormModal";
+import { Remove, More, Edit, Drag } from "../../../../assets/IconSet";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function Body({
   forms,
   page,
   rowsPerPage,
   selectedForm,
-  setSelectedForm,
+  setFormToDelete,
+  redirectEdit,
+  handleCloseMenu,
+  handleOpenMenu,
+  open,
+  setIsModalOpen,
+  onDragEnd, // Add onDragEnd for drag handling
 }) {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(null);
-  const [formToDelete, setFormToDelete] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenMenu = (event, events) => {
-    setOpen(event.currentTarget);
-    setSelectedForm(events);
-  };
-
-  const handleCloseMenu = () => {
-    setOpen(null);
-  };
-
-  const redirectEdit = (event, data) => {
-    event.preventDefault();
-    navigate(`/form/${data._id}`);
-  };
-
-  const removeJournal = async (id) => {
-    try {
-      const { data } = await axios.delete(`/form/${id}`);
-
-      // Notify the user of the successful deletion
-      toast.success(data.message || "form deleted successfully");
-
-      // Reload the page to reflect the changes
-      window.location.reload();
-    } catch (err) {
-      console.error("Error deleting form:", err);
-      toast.error("Unable to delete form at the moment.");
-    }
-  };
-
-  const handleRemove = () => {
-    if (formToDelete) {
-      removeJournal(formToDelete._id);
-      setIsModalOpen(false);
-      setFormToDelete(null);
-    }
-  };
   return (
-    <TableBody>
-      {forms
-        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((data) => (
-          <TableRow key={data._id}>
-            <TableCell align="left" sx={{ padding: "16px", width: "420px" }}>
-              <Tooltip title={data.title}>
-                <Box
-                  sx={{
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                  }}
-                >
-                  {data.title}
-                </Box>
-              </Tooltip>
-            </TableCell>
-            <TableCell align="left" sx={{ padding: "16px" }}>
-              <a href={data.link}>Click Here</a>
-            </TableCell>
-            <TableCell align="center">
-              <Tooltip title="Actions">
-                <IconButton
-                  sx={{ width: "40px", height: "40px" }}
-                  onClick={(event) => handleOpenMenu(event, data)}
-                >
-                  <More color="#919EAB" size={24} />
-                </IconButton>
-              </Tooltip>
-            </TableCell>
-          </TableRow>
-        ))}
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="forms">
+        {(provided) => (
+          <TableBody ref={provided.innerRef} {...provided.droppableProps}>
+            {forms
+              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((data, index) => (
+                <Draggable key={data._id} draggableId={data._id} index={index}>
+                  {(provided) => (
+                    <TableRow
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <TableCell align="center" sx={{ width: "40px" }}>
+                        <Tooltip title="Drag">
+                          <IconButton sx={{ width: "40px", height: "40px" }}>
+                            <Drag color="#919EAB" size={24} />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        sx={{ padding: "16px", width: "420px" }}
+                      >
+                        <Tooltip title={data.title}>
+                          <Box
+                            sx={{
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {data.title}
+                          </Box>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell align="left" sx={{ padding: "16px" }}>
+                        <a href={data.link}>Click Here</a>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Tooltip title="Actions">
+                          <IconButton
+                            sx={{ width: "40px", height: "40px" }}
+                            onClick={(event) => handleOpenMenu(event, data)}
+                          >
+                            <More color="#919EAB" size={24} />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Draggable>
+              ))}
+            {provided.placeholder}
+          </TableBody>
+        )}
+      </Droppable>
       <Popover
         open={open}
         anchorEl={open}
@@ -105,7 +91,13 @@ export default function Body({
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: { width: 160, p: "8px", borderRadius: "8px",boxShadow: "-20px 20px 40px -4px rgba(145, 158, 171, 0.24)", },        }}
+          sx: {
+            width: 160,
+            p: "8px",
+            borderRadius: "8px",
+            boxShadow: "-20px 20px 40px -4px rgba(145, 158, 171, 0.24)",
+          },
+        }}
       >
         <MenuItem
           sx={{ display: "flex", gap: "8px", mb: "8px", borderRadius: "8px" }}
@@ -130,28 +122,26 @@ export default function Body({
           <Remove color="red" size={20} /> Delete
         </MenuItem>
       </Popover>
-      <RemoveFormModal
-        isOpen={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
-        formTitle={formToDelete ? formToDelete.title : ""}
-        handleRemove={handleRemove}
-      />
-    </TableBody>
+    </DragDropContext>
   );
 }
 
 Body.propTypes = {
-  forms: PropTypes.any,
-  page: PropTypes.any,
-  rowsPerPage: PropTypes.any,
-  handleRemove: PropTypes.any,
-  isModalOpen: PropTypes.any,
-  showModal: PropTypes.any,
-  selectedForm: PropTypes.any,
-  setSelectedForm: PropTypes.any,
-  setFormToDelete: PropTypes.any,
-  formTitle: PropTypes.any,
-  handleClose: PropTypes.any,
-  isOpen: PropTypes.any,
-  setIsModalOpen: PropTypes.any,
+  forms: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      link: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  selectedForm: PropTypes.object,
+  setFormToDelete: PropTypes.func.isRequired,
+  redirectEdit: PropTypes.func.isRequired,
+  handleCloseMenu: PropTypes.func.isRequired,
+  handleOpenMenu: PropTypes.func.isRequired,
+  open: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  onDragEnd: PropTypes.func.isRequired, // Add prop validation for onDragEnd
 };

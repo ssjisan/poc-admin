@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Box, Button, Grid, Stack, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import toast from "react-hot-toast";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,7 +9,7 @@ import { Calender } from "../../../assets/IconSet";
 import dayjs from "dayjs";
 
 export default function UpdateJournal() {
-  const { journalId } = useParams(); // Get the journal ID from the URL
+  const { linkId } = useParams(); // Get the journal ID from the URL
   const navigate = useNavigate();
 
   const [journalData, setJournalData] = useState({
@@ -20,7 +20,7 @@ export default function UpdateJournal() {
   useEffect(() => {
     const fetchJournal = async () => {
       try {
-        const response = await axios.get(`/journal/${journalId}`);
+        const response = await axios.get(`/link/${linkId}`);
         setJournalData({
           title: response.data.title,
           publishedDate: dayjs(response.data.publishedDate),
@@ -32,7 +32,7 @@ export default function UpdateJournal() {
     };
 
     fetchJournal();
-  }, [journalId]);
+  }, [linkId]);
 
   const [isUpdating, setIsUpdating] = useState(false); // State to manage button disabled status
 
@@ -45,9 +45,9 @@ const handleUpdate = async (event) => {
       ...journalData,
       publishedDate: journalData.publishedDate.toISOString(), // Convert date to ISO string
     };
-    await axios.put(`/journal/${journalId}`, updatedData);
-    navigate("/journals"); // Redirect to the journals route
+    await axios.put(`/link/${linkId}`, updatedData);
     toast.success("Journal updated successfully");
+    navigate("/links"); // Redirect to the journals route
   } catch (err) {
     toast.error("Failed to update link");
   } finally {
@@ -101,7 +101,8 @@ const handleUpdate = async (event) => {
               variant="contained"
               type="submit"
               disabled={isUpdating}
-              endIcon={isUpdating ? <img src="/spinner.gif" width="24px" /> : null}
+              endIcon={isUpdating ? <CircularProgress color="inherit" size={24} /> : null}
+
             >
               {isUpdating ? "Updating" : "Update"}
             </Button>
