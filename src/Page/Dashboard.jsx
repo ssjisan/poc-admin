@@ -1,13 +1,12 @@
 import { Box, Grid, Toolbar, useMediaQuery } from "@mui/material";
 import Sidebar from "../Layout/Sidebar";
 import MatrixCardDeck from "../Components/Dashboard/MatrixCardDeck";
-import SupportCard from "../Components/Dashboard/SupportCard/SupportCard";
-import DirectNavigation from "../Components/Dashboard/DirectNavigation/DirectNavigation";
+import WelcomeCard from "../Components/Dashboard/WelcomeCard";
 
 export default function Dashboard() {
   const drawerWidth = 280;
   const forBelow1200 = useMediaQuery("(min-width:1200px)");
-  
+
   return (
     <Box>
       <Sidebar />
@@ -22,16 +21,12 @@ export default function Dashboard() {
         <Toolbar />
         <Box>
           <Grid container spacing={3} alignItems="stretch">
-            <Grid item xs={12} sm={12} md={7}>
-              <SupportCard />
-            </Grid>
-            <Grid item xs={12} sm={12} md={5}>
-              <DirectNavigation />
+            <Grid item xs={12} sm={12} md={12}>
+              <WelcomeCard />
             </Grid>
           </Grid>
           <MatrixCardDeck />
         </Box>
-        
       </Box>
     </Box>
   );

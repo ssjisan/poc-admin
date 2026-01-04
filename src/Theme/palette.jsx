@@ -7,9 +7,9 @@ export const grey = {
 };
 
 export const primary = {
-  light: "#F5FBF9",
-  main: "#00AE60",
-  dark: "#008549",
+  light: "rgba(239, 229, 255, 1)",
+  main: "#792df8",
+  dark: "#5520ae",
 };
 export const info = {
   light: "#F5FDFF",
@@ -47,6 +47,7 @@ export function palette() {
     text: {
       primary: grey[900],
       secondary: grey[500],
+      tertiary: grey[100],
       disabled: alpha(grey[900], 0.24),
     },
     background: {

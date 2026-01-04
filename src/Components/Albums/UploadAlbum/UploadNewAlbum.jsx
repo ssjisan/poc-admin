@@ -3,112 +3,226 @@ import UploadAlbumForm from "./UploadAlbumForm";
 import UploadImagePreview from "./UploadImagePreview";
 import { useState } from "react";
 import axios from "axios";
-import toast from "react-hot-toast"; // Import react-hot-toast for notifications
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+// ⚙️ Cloudinary credentials
+const CLOUD_NAME = "dzcpx6hrf";
+const UPLOAD_PRESET = "aoa-albums-preset";
+
 export default function UploadNewAlbum() {
-  const [images, setImages] = useState([]); // State to hold uploaded images
-  const [isSubmitting, setIsSubmitting] = useState(false); // State for create button loading
-  const [albumName, setAlbumName] = useState(""); // State for album name
+  const [images, setImages] = useState([]);
+  const [rejectedFiles, setRejectedFiles] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [albumName, setAlbumName] = useState("");
   const navigate = useNavigate();
-  
-  // Handle image uploads
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.map((file, index) => ({
-      id: `${file.name}-${index}-${Date.now()}`, // Generate a unique id
-      src: URL.createObjectURL(file),
-      name: file.name,
-      size: (file.size / (1024 * 1024)).toFixed(2),
-      file,
-    }));
-    setImages((prevImages) => [...prevImages, ...newImages]);
-  };
 
-  // Handle image removal
-  const handleRemoveImage = (id) => {
-    setImages((prevImages) => prevImages.filter((image) => image.id !== id));
-  };
+  const MAX_FILE_SIZE_MB = 5;
 
-  // Handle album form submission (send data to the backend)
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  // ---------------------------------------------------------------------
+  // 📤 Upload a single image to Cloudinary with progress
+  // ---------------------------------------------------------------------
+  const uploadToCloudinary = (file, onProgress) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
 
-    if (!albumName) {
-      toast.error("Album name is required");
-      return;
-    }
-    if (images.length === 0) {
-      toast.error("Please upload at least one image");
-      return;
-    }
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
 
-    setIsSubmitting(true); // Show loading state
-    const loadingToastId = toast.loading("Uploading album..."); // Start loading toast
+      xhr.open("POST", url);
 
-    // Prepare form data
-    const formData = new FormData();
-    formData.append("name", albumName); // Add the album name
-    images.forEach((image) => {
-      formData.append("images", image.file); // Append the image files
-    });
-
-    try {
-      const response = await axios.post("/upload_album", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress(percent);
+        }
       });
 
-      if (response.status === 201) {
-        navigate("/album_list");
-        toast.success("Album created successfully");
-        setAlbumName(""); // Clear album name
-        setImages([]); // Clear uploaded images
-      }
-    } catch (error) {
-      console.error("Error creating album:", error);
-
-      // Handle specific errors from the backend
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message;
-
-        if (errorMessage.includes("File size too large")) {
-          toast.error("File size too large. Maximum allowed is 10MB.");
-        } else if (errorMessage.includes("E11000 duplicate key error")) {
-          toast.error(
-            "An album with this name already exists. Please choose a different name."
-          );
-        } else {
-          toast.error(errorMessage);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            resolve(data);
+          } else {
+            reject(new Error("Upload failed"));
+          }
         }
+      };
+
+      xhr.send(formData);
+    });
+  };
+
+  // ---------------------------------------------------------------------
+  // 📁 Handle file selection & auto upload
+  // ---------------------------------------------------------------------
+  const handleImageUpload = async (event) => {
+    const files = Array.from(event.target.files);
+    const validFiles = [];
+    const rejected = [];
+
+    files.forEach((file, index) => {
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        rejected.push(file.name);
       } else {
-        toast.error("Error creating album. Please try again.");
+        validFiles.push({
+          id: `${file.name}-${index}-${Date.now()}`,
+          name: file.name,
+          size: (file.size / (1024 * 1024)).toFixed(2),
+          file,
+          progress: 0,
+          uploading: true,
+          uploaded: false,
+          src: URL.createObjectURL(file),
+        });
       }
-    } finally {
-      setIsSubmitting(false); // Re-enable button after submission
-      toast.dismiss(loadingToastId); // Dismiss loading toast
+    });
+
+    if (rejected.length > 0) {
+      setRejectedFiles((prev) => [...prev, ...rejected]);
+      toast.error(`Some files exceed the ${MAX_FILE_SIZE_MB}MB limit`);
+    }
+
+    setImages((prev) => [...prev, ...validFiles]);
+    setIsUploading(true);
+
+    for (const img of validFiles) {
+      try {
+        const res = await uploadToCloudinary(img.file, (percent) => {
+          setImages((prev) =>
+            prev.map((i) => (i.id === img.id ? { ...i, progress: percent } : i))
+          );
+        });
+
+        // ✅ Upload completed
+        setImages((prev) =>
+          prev.map((i) =>
+            i.id === img.id
+              ? {
+                  ...i,
+                  src: res.secure_url,
+                  public_id: res.public_id,
+                  size: (res.bytes / (1024 * 1024)).toFixed(2),
+                  uploading: false,
+                  uploaded: true,
+                  progress: 100,
+                }
+              : i
+          )
+        );
+      } catch (error) {
+        console.error("Cloudinary upload failed:", error);
+        toast.error(`Failed to upload ${img.name}`);
+        setImages((prev) => prev.filter((i) => i.id !== img.id));
+      }
+    }
+
+    setIsUploading(false);
+  };
+
+  // ---------------------------------------------------------------------
+  // 🗑️ Remove image from preview
+  // ---------------------------------------------------------------------
+  const handleRemoveImage = async (id, public_id) => {
+    const toastId = toast.loading("Removing image...");
+
+    try {
+      // If public_id exists, call backend to remove from Cloudinary
+      if (public_id) {
+        const res = await axios.post("/delete-image", { public_id });
+
+        if (!res.data.success) {
+          toast.error(res.data.message || "Failed to remove image", {
+            id: toastId,
+          });
+          return;
+        }
+      }
+
+      // Remove from local state in any case
+      setImages((prev) => prev.filter((img) => img.id !== id));
+      toast.success("Image removed successfully!", { id: toastId });
+    } catch (error) {
+      console.error("Failed to remove image:", error);
+      toast.error("Failed to remove image", { id: toastId });
     }
   };
 
+  // ---------------------------------------------------------------------
+  // 💾 Save album info to backend
+  // ---------------------------------------------------------------------
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!albumName.trim()) {
+      toast.error("Please enter an album name");
+      return;
+    }
+
+    const uploadedImages = images.filter((img) => img.uploaded);
+    if (uploadedImages.length === 0) {
+      toast.error("Please upload at least one valid image");
+      return;
+    }
+
+    setIsSaving(true);
+    const toastId = toast.loading("Saving album...");
+
+    try {
+      const payload = {
+        albumName,
+        images: uploadedImages.map((img) => ({
+          src: img.src,
+          public_id: img.public_id,
+          name: img.name,
+          size: img.size,
+        })),
+      };
+
+      const res = await axios.post("/create-album", payload);
+
+      if (res.data.success) {
+        toast.success("Album saved successfully!", { id: toastId });
+        setAlbumName("");
+        setImages([]);
+        setRejectedFiles([]);
+        navigate("/album_list");
+      } else {
+        toast.error(res.data.error || "Failed to save album", { id: toastId });
+      }
+    } catch (err) {
+      console.error("Album save error:", err);
+      toast.error("Failed to save album. Try again.", { id: toastId });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // ---------------------------------------------------------------------
+  // 🧩 Render
+  // ---------------------------------------------------------------------
   return (
     <Box sx={{ p: "24px 24px 0px 24px" }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} md={12} lg={3}>
+        <Grid item xs={12} md={3}>
           <UploadAlbumForm
             onImageUpload={handleImageUpload}
             onFormSubmit={handleFormSubmit}
             albumName={albumName}
-            setAlbumName={setAlbumName} // Pass the album name state and setter
-            isSubmitting={isSubmitting} // Pass loading state to the form
+            setAlbumName={setAlbumName}
+            isSubmitting={isSaving || isUploading}
           />
         </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={9}>
+        <Grid item xs={12} md={9}>
           <UploadImagePreview
             images={images}
             setImages={setImages}
             handleRemoveImage={handleRemoveImage}
-            isSubmitting={isSubmitting} // Pass submission state
+            rejectedFiles={rejectedFiles}
+            isSubmitting={isSaving || isUploading}
           />
         </Grid>
       </Grid>

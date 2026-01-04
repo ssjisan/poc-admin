@@ -68,6 +68,9 @@ export default function Body({
                             </IconButton>
                           </Tooltip>
                         </TableCell>
+                        <TableCell align="left" sx={{ p: "16px" }}>
+                          {data.order}
+                        </TableCell>
                         <TableCell component="th" scope="row">
                           <Stack
                             direction="row"

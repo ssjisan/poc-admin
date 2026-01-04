@@ -1,24 +1,37 @@
 import { Box, Table, TableContainer } from "@mui/material";
-import Header from "./Header";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Body from "./Body";
-import Pagination from "./Pagination";
 import RemoveAlbum from "../../RemoveAlbum/RemoveAlbum";
 import Gallery from "../../GalleryViewer/Gallery";
 import { useNavigate } from "react-router-dom";
+import CustomeHeader from "../../../Common/Table/CustomeHeader";
+import CustomePagination from "../../../Common/Table/CustomePagination";
 
 export default function TableView() {
   const [albums, setAlbums] = useState([]);
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [albumToDelete, setAlbumToDelete] = useState(null);
   const [albumOpen, setAlbumOpen] = useState(false);
   const navigate = useNavigate();
+
+  // ***************** Table Header Columns ************************* //
+
+  const columns = [
+    { key: "order", label: "Order" },
+    { key: "album name", label: "Album Name" },
+    { key: "upload date	", label: "Upload Date" },
+    { key: "file count	", label: "File Count" },
+    { key: "total size	", label: "Total Size" },
+  ];
+
+  // ***************** Table Header Columns ************************* //
+
   // Load Albums Start //
   useEffect(() => {
     loadAlbums();
@@ -30,17 +43,6 @@ export default function TableView() {
     } catch (err) {
       toast.error("Check");
     }
-  };
-
-  // Paginations Controller Start //
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
   };
 
   // Popover Menu Controller Start //
@@ -96,33 +98,73 @@ export default function TableView() {
     }
   };
 
-  // Edit Album COntroller Start
+  // Edit Album Controller Start
 
   const redirectEdit = (e, selectedAlbum) => {
     navigate(`/album/${selectedAlbum._id}`);
   };
 
+  // Dragging and reorder
   const onDragEnd = async (result) => {
-    if (!result.destination) return;
+  const { destination, source } = result;
 
-    const reorderedAlbums = Array.from(albums);
-    const [movedVideo] = reorderedAlbums.splice(result.source.index, 1);
-    reorderedAlbums.splice(result.destination.index, 0, movedVideo);
-    setAlbums(reorderedAlbums);
+  // If dropped outside the droppable area or position didn't change
+  if (!destination || (destination.index === source.index)) return;
 
-    // Send reordered video IDs to the backend
-    const reorderedIds = reorderedAlbums.map((album) => album._id);
-    console.log("Sending reordered videos to the server:", reorderedIds);
+  // Reorder the local albums array
+  const reorderedAlbums = Array.from(albums);
+  const [movedAlbum] = reorderedAlbums.splice(source.index, 1);
+  reorderedAlbums.splice(destination.index, 0, movedAlbum);
 
-    try {
-      await axios.post("/update-album-order", { reorderedAlbums });
+  // Update local state immediately for fast UI response
+  setAlbums(reorderedAlbums);
+
+  // Prepare array of ids in new order for backend
+  const reorderedAlbumIds = reorderedAlbums.map((album) => album._id);
+
+  try {
+    // Call backend API to save new order
+    const response = await axios.post("/update-album-order", {
+      reorderedAlbums: reorderedAlbumIds,
+    });
+
+    if (response.data.success) {
+      // Optionally update local albums with authoritative data from server
+      setAlbums(response.data.albums);
       toast.success("Album order updated successfully!");
+    } else {
+      toast.error(response.data.message || "Failed to update album order");
+    }
+  } catch (error) {
+    console.error("Error updating album order:", error);
+    toast.error("Network error: failed to update album order");
+  }
+};
+
+  const handleDownloadAlbum = async () => {
+    handleCloseMenu();
+    const toastId = toast.loading("Downloading album, please wait...");
+    try {
+      if (!selectedAlbum?.slug) return;
+
+      const response = await axios.get(`/${selectedAlbum.slug}/download`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${selectedAlbum.name}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.dismiss(toastId);
     } catch (error) {
-      console.error("Error updating album order:", error);
-      toast.error("Failed to update album order.");
+      console.error("Error downloading album:", error);
+      toast.error("Error downloading album:", error);
+      toast.dismiss(toastId);
     }
   };
-
   return (
     <Box
       sx={{
@@ -135,10 +177,17 @@ export default function TableView() {
     >
       <TableContainer>
         <Table>
-          <Header />
+          <CustomeHeader
+            columns={columns}
+            includeActions={true}
+            includeDrag={true}
+          />
           <Body
             onDragEnd={onDragEnd}
-            albums={albums}
+            albums={albums.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )}
             page={page}
             rowsPerPage={rowsPerPage}
             open={open}
@@ -151,13 +200,14 @@ export default function TableView() {
             handleAlbumClose={handleAlbumClose}
             showConfirmationModal={showConfirmationModal}
             redirectEdit={redirectEdit}
+            handleDownloadAlbum={handleDownloadAlbum}
           />
-          <Pagination
-            albums={albums}
+          <CustomePagination
+            count={albums.length}
             page={page}
+            setPage={setPage}
             rowsPerPage={rowsPerPage}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            setRowsPerPage={setRowsPerPage}
           />
         </Table>
       </TableContainer>

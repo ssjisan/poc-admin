@@ -16,7 +16,7 @@ const navConfig = ({ pathname }) => [
   {
     title: "Overview",
     icon: (
-      <Dashboard color={pathname === "/" ? "#00AE60" : "#637381"} size={20} />
+      <Dashboard color={pathname === "/" ? "#792df8" : "#637381"} size={20} />
     ),
     items: [
       {
@@ -28,7 +28,10 @@ const navConfig = ({ pathname }) => [
   {
     title: "Appointments",
     icon: (
-      <Calender color={pathname === "/appointments" ? "#00AE60" : "#637381"} size={20} />
+      <Calender
+        color={pathname === "/appointments" ? "#792df8" : "#637381"}
+        size={20}
+      />
     ),
     items: [
       {
@@ -44,7 +47,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/create_guidance") ||
           pathname.startsWith("/guidance_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -68,7 +71,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/upload_album") ||
           pathname.startsWith("/album_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -92,7 +95,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/upload_video") ||
           pathname.startsWith("/video_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -116,7 +119,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/upload_exercise_video") ||
           pathname.startsWith("/exercise_video_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -140,7 +143,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/add_doctor") ||
           pathname.startsWith("/doctor_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -163,7 +166,7 @@ const navConfig = ({ pathname }) => [
       <Blog
         color={
           pathname.startsWith("/write_blog") || pathname.startsWith("/blog")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -185,9 +188,8 @@ const navConfig = ({ pathname }) => [
     icon: (
       <JournalList
         color={
-          pathname.startsWith("/add_link") ||
-          pathname.startsWith("/links")
-            ? "#00AE60"
+          pathname.startsWith("/add_link") || pathname.startsWith("/links")
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -210,7 +212,7 @@ const navConfig = ({ pathname }) => [
       <Form
         color={
           pathname.startsWith("/upload_form") || pathname.startsWith("/forms")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}
@@ -234,7 +236,7 @@ const navConfig = ({ pathname }) => [
         color={
           pathname.startsWith("/create_user") ||
           pathname.startsWith("/user_list")
-            ? "#00AE60"
+            ? "#792df8"
             : "#637381"
         }
         size={20}

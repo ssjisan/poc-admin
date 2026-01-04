@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { DataContext } from "../../../DataProcessing/DataProcessing";
 
 export default function Header() {
-  const {auth} = useContext(DataContext)
+  const { auth } = useContext(DataContext);
 
   return (
     <TableHead sx={{ borderRadius: "1em 0 0 1em" }}>

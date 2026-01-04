@@ -6,6 +6,7 @@ export default function Header() {
     <TableHead sx={{ borderRadius: "1em 0 0 1em" }}>
       <TableRow>
         <TableCell align="center" sx={{ width: "64px" }}></TableCell>
+        <TableCell align="left">Order</TableCell>
         <TableCell align="left">Album Name</TableCell>
         <TableCell align="left">
           <Stack>Upload Date</Stack>

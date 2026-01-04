@@ -73,14 +73,19 @@ export default function TableViewer() {
     const reorderedVideos = Array.from(videos);
     const [movedVideo] = reorderedVideos.splice(result.source.index, 1);
     reorderedVideos.splice(result.destination.index, 0, movedVideo);
-    setVideos(reorderedVideos);
 
-    // Send reordered video IDs to the backend
-    const reorderedIds = reorderedVideos.map((video) => video._id);
-    console.log("Sending reordered videos to the server:", reorderedIds);
+    // Update the order field based on index
+    const updatedVideos = reorderedVideos.map((video, index) => ({
+      ...video,
+      order: index + 1, // or just index if you want 0-based
+    }));
+
+    setVideos(updatedVideos);
 
     try {
-      await axios.post("/update-video-order", { reorderedVideos });
+      await axios.post("/update-video-order", {
+        reorderedVideos: updatedVideos,
+      });
       toast.success("Video order updated successfully!");
     } catch (error) {
       console.error("Error updating video order:", error);
@@ -137,7 +142,6 @@ export default function TableViewer() {
     handleCloseMenu(); // Close popover
   };
 
-
   // Edit Video COntroller Start
 
   const redirectEdit = (e, selectedAlbum) => {
@@ -180,7 +184,11 @@ export default function TableViewer() {
           />
         </Table>
       </TableContainer>
-      <VideoPlay videoOpen={videoOpen} handleVideoClose={handleVideoClose} source={selectedVideo?.url}/>
+      <VideoPlay
+        videoOpen={videoOpen}
+        handleVideoClose={handleVideoClose}
+        source={selectedVideo?.url}
+      />
       <RemoveVideo
         confirmationModalOpen={confirmationModalOpen}
         videoName={videoToDelete ? videoToDelete.title : ""}

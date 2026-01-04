@@ -41,7 +41,11 @@ export default function SupportCard() {
         </a>
       </Box>
       <Box sx={{ p: "24px", width: forBelow676 ? "100%" : "280px" }}>
-        <img src="https://res.cloudinary.com/dmyttqosa/image/upload/v1730748105/user_panel/nlcscfsjtvxbbcpl8pkj.png" alt="support" width="100%" />
+        <img
+          src="https://res.cloudinary.com/dmyttqosa/image/upload/v1730748105/user_panel/nlcscfsjtvxbbcpl8pkj.png"
+          alt="support"
+          width="100%"
+        />
       </Box>
     </Box>
   );

@@ -24,10 +24,9 @@ export default function DataProcessing({ children }) {
   } = LoginForm();
   // -----------------------------------------------Login Controller End----------------------------------------------------- //
 
- 
   // Axios Configuration
   // eslint-disable-next-line
-  axios.defaults.baseURL = process.env.REACT_APP_SERVER_API;
+  axios.defaults.baseURL = process.env.VITE_API_BASE_URL;
   axios.defaults.headers.common["Authorization"] = auth?.token;
   return (
     <DataContext.Provider

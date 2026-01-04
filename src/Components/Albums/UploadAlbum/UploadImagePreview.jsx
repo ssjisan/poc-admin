@@ -1,6 +1,6 @@
 import {
   Box,
-  CircularProgress,
+  LinearProgress,
   IconButton,
   Stack,
   Typography,
@@ -14,49 +14,54 @@ export default function UploadImagePreview({
   setImages,
   handleRemoveImage,
   isSubmitting,
+  rejectedFiles,
 }) {
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
 
-    const items = Array.from(images);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setImages(items);
+    const reorderedImages = Array.from(images);
+    const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    reorderedImages.splice(result.destination.index, 0, movedImage);
+    setImages(reorderedImages);
   };
 
   return (
-    <DragDropContext onDragEnd={handleOnDragEnd}>
-      <Droppable droppableId="images">
-        {(provided) => (
-          <Stack
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            sx={{ p: "40px 0px" }}
-          >
-            {images.map((data, index) => (
-              <Draggable key={data.id} draggableId={data.id} index={index}>
-                {(provided) => (
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    sx={{
-                      border: "1px solid #DBDCDC",
-                      borderRadius: "12px",
-                      p: "8px 4px",
-                      mt: 2,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Stack direction="row" alignItems="center" gap="12px">
-                      <IconButton {...provided.dragHandleProps} disabled={isSubmitting}>
-                        <Drag size={24} color="#000" />
-                      </IconButton>
-                      <Stack>
+    <>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="images">
+          {(provided) => (
+            <Stack
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              sx={{ p: "40px 0px" }}
+            >
+              {images.map((data, index) => (
+                <Draggable key={data.id} draggableId={data.id} index={index}>
+                  {(provided) => (
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      sx={{
+                        border: "1px solid #DBDCDC",
+                        borderRadius: "12px",
+                        p: "8px 4px",
+                        mt: 2,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        gap="12px"
+                        style={{ width: "100%" }}
+                      >
+                        <IconButton {...provided.dragHandleProps}>
+                          <Drag size={24} color="#000" />
+                        </IconButton>
                         <img
                           src={data.src}
                           alt="Uploaded"
@@ -67,30 +72,83 @@ export default function UploadImagePreview({
                             objectFit: "cover",
                           }}
                         />
+                        {data.uploading ? (
+                          // ⚡ Linear progress while uploading instead of name/size
+                          <Stack style={{ width: "100%" }}>
+                            <Box sx={{ width: "100%" }}>
+                              <LinearProgress
+                                variant="determinate"
+                                value={data.progress}
+                              />
+                              <Typography variant="caption" sx={{ mt: 0.5 }}>
+                                {data.progress}%
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        ) : (
+                          <Stack style={{ width: "100%" }}>
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {data.name}
+                            </Typography>
+                          </Stack>
+                        )}
                       </Stack>
-                      <Typography variant="body1">{data.name}</Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" gap="12px">
-                      <Typography variant="body1">{data.size} MB</Typography>
-                      {isSubmitting ? (
-                        <Box sx={{ height: "24px", width: "36px" }}>
-                          <CircularProgress size={20} />
-                        </Box>
-                      ) : (
-                        <IconButton onClick={() => handleRemoveImage(data.id)}>
-                          <Cross size={24} color="red" />
-                        </IconButton>
+
+                      {!data.uploading && (
+                        <Stack
+                          flexDirection="row"
+                          gap="4px"
+                          alignItems="center"
+                        >
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {data.size} MB
+                          </Typography>
+                          <IconButton
+                            onClick={() =>
+                              handleRemoveImage(data.id, data.public_id)
+                            }
+                            disabled={isSubmitting}
+                          >
+                            <Cross size={24} color="red" />
+                          </IconButton>
+                        </Stack>
                       )}
                     </Stack>
-                  </Stack>
-                )}
-              </Draggable>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </Stack>
+          )}
+        </Droppable>
+      </DragDropContext>
+
+      {rejectedFiles && rejectedFiles.length > 0 && (
+        <div style={{ marginTop: "10px", color: "red" }}>
+          <strong>Files too large (max 5MB):</strong>
+          <ul>
+            {rejectedFiles.map((file, idx) => (
+              <li key={idx}>{file}</li>
             ))}
-            {provided.placeholder}
-          </Stack>
-        )}
-      </Droppable>
-    </DragDropContext>
+          </ul>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -98,5 +156,6 @@ UploadImagePreview.propTypes = {
   images: PropTypes.array.isRequired,
   setImages: PropTypes.func.isRequired,
   handleRemoveImage: PropTypes.func.isRequired,
-  isSubmitting: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  rejectedFiles: PropTypes.array,
 };
